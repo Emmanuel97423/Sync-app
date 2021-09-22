@@ -14,10 +14,19 @@ import { UploadToCloud } from '../utils/upload.js'
 // const url = 'http://monserver.com'
 
 exports.convertToJson = async (req, res, next) => {
+    const directory = './assets/images/'
+    // async (directory) => {
+    //     try {
+    //         await fsExtra.ensureDir(directory)
+    //         console.log('success!')
+    //     } catch (err) {
+    //         console.error(err)
+    //     }
+    // }
 
 
     const decodeBase64 = (base64str, filename, productName, dataObject) => {
-        let urlImg = ""
+
         let buf = Buffer.from(base64str, 'base64');
         fs.writeFile(path.join('./assets/images/', filename), buf, (error) => {
             if (error) {
@@ -38,30 +47,36 @@ exports.convertToJson = async (req, res, next) => {
                         const uploadResult = new UploadToCloud(imgResize, filename)
                         uploadResult.upload
                         setTimeout(() => {
+
                             try {
-                                if (urlImg) {
-                                    console.log('uploadResult:', uploadResult._result)
-                                    urlImg = uploadResult._urlImg
-                                    console.log('urlImg', urlImg)
-                                    console.log('productName:', productName)
 
-                                    console.log('libelle:', dataObject.libelle)
+                                if (uploadResult._urlImg) {
+                                    console.log('URL:', uploadResult._urlImg)
+                                    console.log('Libellé:', dataObject.libelle)
                                     console.log('Prix HT:', parseFloat(dataObject.PVHT))
-
-                                    console.log('Envoi terminé avec succée!')
-                                } else {
-                                    console.log('Envoi refusé: image abscente')
-                                    return false;
                                 }
+                                // let urlImg = ""
+                                // if (urlImg) {
+                                //     console.log('libelle:', dataObject.libelle)
+                                //     console.log('Prix HT:', parseFloat(dataObject.PVHT))
+                                //     urlImg = uploadResult._urlImg
+                                //     console.log('urlImg', urlImg)
+                                //     console.log('productName:', productName)
 
 
+
+                                //     console.log('Envoi terminé vers mongo Db avec succée!')
+                                // } else {
+                                //     console.log('Envoi vers mongo refusé: image abscente')
+                                //     return false;
+                                // }
 
                             } catch (error) {
                                 console.log("error", error)
                                 return false;
 
                             }
-                        }, 5000)
+                        }, 8000)
                         console.log('Import terminé!')
                     } catch (error) {
                         console.log('Import échoué!')
@@ -97,7 +112,7 @@ exports.convertToJson = async (req, res, next) => {
             //to lower case product name
             productName = productName.toLowerCase().replace(/\s/g, '-')
 
-            let imageName = productName + '.jpg'
+            let imageName = productName
             // let imageUrl = "./assets/images/" + imageName
             //Convert base64 to file
             let base64String = data[key].image1;
@@ -110,20 +125,21 @@ exports.convertToJson = async (req, res, next) => {
 
                     setTimeout(() => {
                         try {
-                            const directory = './assets/images/'
+
                             fsExtra.emptyDirSync(directory)
                             console.log("Supression image en cache terminé")
-
+                            res.status(200).json({ message: 'Import envoyé' })
                         } catch (error) {
                             console.log("La suppression des images du dossier à échouer: " + error)
 
                         }
 
-                    }, 10000)
+                    }, 15000)
 
                 } catch (e) {
                     console.error(e)
                     console.log('Import  échoué!')
+                    res.status(400).send({ message: 'Importation erreur' })
                 }
 
             }

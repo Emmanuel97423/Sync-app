@@ -39,6 +39,7 @@ export class UploadToCloud {
             },
                 (error, result) => {
                     if (result) {
+                        // console.log('result:', result)
 
                         this._result = result;
                         this._urlImg = result.url
