@@ -1,4 +1,5 @@
 const sharp = require('sharp');
+const fs = require('fs');
 // sharp.cache(false);
 
 // const resize = async (img, imgResizeName, width) => {
@@ -24,11 +25,20 @@ export class ResizeClass {
 
     async resizeMedium() {
         try {
+
             await sharp(this._img).resize(this._width).toFile(this._imgResizeName);
-            console.log('Image redimensionné!')
+            console.log('Image: ' + this._imgResizeName + ' redimensionné!')
+            try {
+                fs.unlinkSync(this._img)
+                console.log('Supression image:' + this._imgResizeName + ' Réussi!')
+            } catch (error) {
+                console.log('La suppression à échoué: ' + error)
+
+            }
         }
         catch (err) {
-            console.log(err)
+            console.log("Le redimensionnement a échoué la Poooo!: Format d'image invalide!")
+            return false
         }
     }
 }

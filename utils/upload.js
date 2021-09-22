@@ -1,4 +1,5 @@
 const cloudinary = require('cloudinary');
+const fs = require('fs');
 
 require('dotenv').config()
 
@@ -18,26 +19,40 @@ cloudinary.config({
 // cloudinary.image("turtles.jpg", { width: 70, height: 53, crop: "scale" })
 
 export class UploadToCloud {
-    constructor(imgResize, filename, result) {
+    constructor(imgResize, filename, result, urlImg) {
         this._imgResize = imgResize;
         this._filename = filename;
         this._result = result
+        this._urlImg = urlImg;
 
     }
     get upload() {
         return this.uploadMethod()
     }
     uploadMethod() {
+        console.log('this._imgResize:', this._imgResize)
         // try {
         setTimeout(() => {
             cloudinary.v2.uploader.upload(this._imgResize, {
+
                 public_id: this._filename,
             },
                 (error, result) => {
                     if (result) {
-                        console.log(result)
-                        return this._result = result;
-                    } else { console.log(error) }
+
+                        this._result = result;
+                        this._urlImg = result.url
+                        console.log("Image: " + this._filename + " uploader avec succée!")
+                        try {
+                            fs.unlinkSync(this._imgResize)
+                        } catch (error) {
+                            console.log("Impossible de supprimer l'image: " + error)
+                        }
+                    } else {
+                        console.log("Image: " + this._filename + " upload errooooor!")
+                        console.log(error)
+                        return error
+                    }
                 })
         }, 2000)
 
