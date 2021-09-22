@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const fsExtra = require('fs-extra')
 
+const Product = require('../models/product.model')
+
 // const uploadFile = require('../utils/upload.js')
 
 import { ResizeClass } from '../utils/resizeImage.js'
@@ -54,6 +56,20 @@ exports.convertToJson = async (req, res, next) => {
                                     console.log('URL:', uploadResult._urlImg)
                                     console.log('Libellé:', dataObject.libelle)
                                     console.log('Prix HT:', parseFloat(dataObject.PVHT))
+                                        Product.findOne({ name: dataObject.libelle }).then((name)=>{
+                                        if (name) {
+                                             console.log("Produit déjà existant") 
+                                        } else { 
+                                            const product = new Product({
+                                                name: dataObject.libelle,
+                                                imageUrl:  uploadResult._urlImg,
+                                                price: parseFloat(dataObject.PVHT),
+                                            });
+                                            product.save().then(() => console.log("Produit enregister sur la base de données"))
+                                                            .catch((error) => console.log(error));
+                                        }
+                                    }).catch((error) => console.log(error));
+                                    
                                 }
                                 // let urlImg = ""
                                 // if (urlImg) {
