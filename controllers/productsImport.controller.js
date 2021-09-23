@@ -43,6 +43,8 @@ exports.convertToJson = async (req, res, next) => {
                     const resizeResult = new ResizeClass(img, imgResize, 400);
                     resizeResult.resize
                     // console.log('resizeResult:', resizeResult.resize)
+
+
                     //Upload Image
 
                     try {
@@ -51,41 +53,27 @@ exports.convertToJson = async (req, res, next) => {
                         setTimeout(() => {
 
                             try {
-
+                                //Send data product to MongoDB
                                 if (uploadResult._urlImg) {
                                     console.log('URL:', uploadResult._urlImg)
                                     console.log('Libellé:', dataObject.libelle)
                                     console.log('Prix HT:', parseFloat(dataObject.PVHT))
-                                        Product.findOne({ name: dataObject.libelle }).then((name)=>{
+                                    Product.findOne({ name: dataObject.libelle }).then((name) => {
                                         if (name) {
-                                             console.log("Produit déjà existant") 
-                                        } else { 
+                                            console.log("L'Article " + dataObject.libelle + " est déjà existant")
+                                        } else {
                                             const product = new Product({
                                                 name: dataObject.libelle,
-                                                imageUrl:  uploadResult._urlImg,
+                                                imageUrl: uploadResult._urlImg,
                                                 price: parseFloat(dataObject.PVHT),
                                             });
                                             product.save().then(() => console.log("Produit enregister sur la base de données"))
-                                                            .catch((error) => console.log(error));
+                                                .catch((error) => console.log(error));
                                         }
                                     }).catch((error) => console.log(error));
-                                    
+
                                 }
-                                // let urlImg = ""
-                                // if (urlImg) {
-                                //     console.log('libelle:', dataObject.libelle)
-                                //     console.log('Prix HT:', parseFloat(dataObject.PVHT))
-                                //     urlImg = uploadResult._urlImg
-                                //     console.log('urlImg', urlImg)
-                                //     console.log('productName:', productName)
 
-
-
-                                //     console.log('Envoi terminé vers mongo Db avec succée!')
-                                // } else {
-                                //     console.log('Envoi vers mongo refusé: image abscente')
-                                //     return false;
-                                // }
 
                             } catch (error) {
                                 console.log("error", error)
@@ -110,6 +98,7 @@ exports.convertToJson = async (req, res, next) => {
             };
         });
     };
+
     //Convert to bas64 and send to server
     try {
 
@@ -135,7 +124,7 @@ exports.convertToJson = async (req, res, next) => {
             // console.log('base64String:', base64String)
 
             if (base64String) {
-                console.log(productName)
+
                 try {
                     const decodeBase = decodeBase64(base64String, imageName, productName, dataObject)
 
@@ -144,7 +133,8 @@ exports.convertToJson = async (req, res, next) => {
 
                             fsExtra.emptyDirSync(directory)
                             console.log("Supression image en cache terminé")
-                            res.status(200).json({ message: 'Import envoyé' })
+                            console.log("message: Import envoyé")
+                            return res.status(201).send({ message: 'Import envoyé' })
                         } catch (error) {
                             console.log("La suppression des images du dossier à échouer: " + error)
 
