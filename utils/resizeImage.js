@@ -13,10 +13,11 @@ const fs = require('fs');
 // }
 
 export class ResizeClass {
-    constructor(img, imgResizeName, width) {
+    constructor(img, imgResizeName, width, height) {
         this._img = img;
         this._imgResizeName = imgResizeName;
         this._width = width;
+        this._height = height;
     }
 
     get resize() {
@@ -26,7 +27,10 @@ export class ResizeClass {
     async resizeMedium() {
         try {
 
-            await sharp(this._img).resize(this._width).toFile(this._imgResizeName);
+            await sharp(this._img).resize(this._width, this._height, {
+                fit: 'cover',
+                position: 'center',
+            }).toFile(this._imgResizeName);
             console.log('Image: ' + this._imgResizeName + ' redimensionné!')
             try {
                 fs.unlinkSync(this._img)
