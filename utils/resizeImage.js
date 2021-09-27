@@ -47,4 +47,3 @@ export class ResizeClass {
     }
 }
 
-// module.exports = resize;

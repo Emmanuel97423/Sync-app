@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-
 import { ResizeClass } from './resizeImage.js'
 import { UploadToCloud } from './upload.js'
+
+const fs = require('fs');
+const path = require('path');
 
 
 const Product = require('../models/product.model')
