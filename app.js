@@ -3,7 +3,12 @@ const app = express();
 const productRoute = require('./routes/productsImport.route')
 // const { MongoClient } = require("mongodb");
 const mongoose = require('mongoose');
+const fs = require('fs');
+const md5 = require('md5');
+// const productsImportCtrl = require('../controllers/productsImport.controller')
+// const fetch = require('node-fetch')
 
+// const axios = require('axios');
 
 require('dotenv').config()
 
@@ -17,35 +22,36 @@ mongoose.connect(process.env.MONGO_CONNECT).then(() => {
 }).catch(err => { console.log("Erreur de connexion: " + err) })
 // const client = new MongoClient(uri);
 
+//Watch csv
+// const csv = './assets';
+// console.log(`Watching for file changes on ${csv}`);
+
+// let md5Previous = null;
+// let fsWait = false;
+
+
+// fs.watch(csv, (event, filename) => {
+//   if (filename) {
+//     if (fsWait) return;
+//     fsWait = setTimeout(() => {
+//       fsWait = false;
+//     }, 100);
+//     const md5Current = md5(fs.readFileSync(csv));
+//     if (md5Current === md5Previous) {
+//       return;
+//     }
+//     md5Previous = md5Current;
+//     console.log(`${filename} file Changed`);
 
 
 
-// async function run() {
-//   try {
-//     await client.connect();
-
-//     const database = client.db('sample_mflix');
-//     const movies = database.collection('movies');
-
-//     // Query for a movie that has the title 'Back to the Future'
-//     const query = { title: "The Land Beyond the Sunset" };
-//     const movie = await movies.findOne(query);
-
-//     console.log(movie);
-
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     await client.close();
 //   }
-// }
-// run().catch(console.dir);
+// });
 
-// // app.use('/', (req, res) => {
-// //     console.log('hello world')
-// //     res.send("hello world")
-
-// // });
+//Routes Api
 
 app.use('/api/', productRoute)
+
+
 
 module.exports = app
