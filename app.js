@@ -3,7 +3,12 @@ const app = express();
 const productRoute = require('./routes/productsImport.route')
 // const { MongoClient } = require("mongodb");
 const mongoose = require('mongoose');
+const fs = require('fs');
+const md5 = require('md5');
+// const productsImportCtrl = require('../controllers/productsImport.controller')
+// const fetch = require('node-fetch')
 
+// const axios = require('axios');
 
 require('dotenv').config()
 
@@ -18,34 +23,48 @@ mongoose.connect(process.env.MONGO_CONNECT).then(() => {
 // const client = new MongoClient(uri);
 
 
+const csv = './assets';
+console.log(`Watching for file changes on ${csv}`);
+
+let md5Previous = null;
+let fsWait = false;
 
 
-// async function run() {
-//   try {
-//     await client.connect();
+fs.watch(csv, (event, filename) => {
+  if (filename) {
+    if (fsWait) return;
+    fsWait = setTimeout(() => {
+      fsWait = false;
+    }, 100);
+    const md5Current = md5(fs.readFileSync(csv));
+    if (md5Current === md5Previous) {
+      return;
+    }
+    md5Previous = md5Current;
+    console.log(`${filename} file Changed`);
 
-//     const database = client.db('sample_mflix');
-//     const movies = database.collection('movies');
 
-//     // Query for a movie that has the title 'Back to the Future'
-//     const query = { title: "The Land Beyond the Sunset" };
-//     const movie = await movies.findOne(query);
 
-//     console.log(movie);
-
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     await client.close();
-//   }
-// }
-// run().catch(console.dir);
-
-// // app.use('/', (req, res) => {
-// //     console.log('hello world')
-// //     res.send("hello world")
-
-// // });
+  }
+});
 
 app.use('/api/', productRoute)
+
+
+// let ac = new AbortController();
+// const { signal } = ac;
+// setTimeout(() => ac.abort(), 10000);
+
+// (async () => {
+//   try {
+//     const watcher = watch('./assets/test.csv', { signal });
+//     for await (const event of watcher)
+//       console.log(event);
+//   } catch (err) {
+//     if (err.name === 'AbortError')
+//       return;
+//     throw err;
+//   }
+// })();
 
 module.exports = app
