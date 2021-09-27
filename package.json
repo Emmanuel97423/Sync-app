@@ -6,12 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec babel-node server.js",
-    "prod": "node --exec babel-node server.js"
+    "prod": "node --exec babel-node server.js",
+    "build": "babel src -d build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/node": "^7.15.4",
     "axios": "^0.21.4",
     "cloudinary": "^1.27.0",
     "csvtojson": "^2.0.10",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
     "@babel/preset-env": "^7.15.6"
   }
 }

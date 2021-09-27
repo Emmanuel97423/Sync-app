@@ -1,9 +1,10 @@
 const csv = require('csvtojson');
-const csvFilePath = './assets/test.csv'
+const csvFilePath = './assets/csvCache.csv'
 const fsExtra = require('fs-extra')
 
 
 import { sendProduct } from '../utils/sendProduct.js'
+
 
 
 exports.convertToJson = async (req, res, next) => {
