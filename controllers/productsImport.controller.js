@@ -27,7 +27,7 @@ exports.convertToJson = async (req, res, next) => {
             let dataObject = data[key];
             //Product name
             let productName = data[key].libelle;
-            console.log('productName:', productName)
+            // console.log('productName:', productName)
             //to lower case product name
             productName = productName.toLowerCase().replace(/\s/g, '-')
 
