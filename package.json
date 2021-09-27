@@ -6,10 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec babel-node server.js",
-    "prod": "node --exec babel-node server.js",
+    "prod": "forever start nodemon --exitcrash  server.js",
     "build": "babel src -d build"
   },
-  "author": "",
+  "author": "Emmanuel Narcisse",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.4",

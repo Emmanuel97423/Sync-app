@@ -49,32 +49,75 @@ const cron = require('node-cron');
 
 cron.schedule('* * * * *', () => {
 
-  try {
-    fs.copyFile('./assets/test.csv', './assets/csvCache.csv', (err) => {
-      if (err) throw err;
-      console.log('source.txt was copied to csvCache file');
-      try {
-        //Import request
-        http.get('http://localhost:3000/api/import', (res) => {
-          console.log('statusCode:', res.statusCode);
-          console.log('headers:', res.headers);
+  let read = fs.createReadStream('./assets/test.csv')
+  let write = fs.createWriteStream('./assets/csvCache.csv')
+  let progress = 0
 
-          res.on('data', (d) => {
-            process.stdout.write(d);
-          });
+  fs.stat('./assets/test.csv', async (err, stat) => {
+    let total = stat.size
+    read.on('data', (chunk) => {
+      progress += chunk.length
+      console.log("j'ai lu " + Math.round(100 * progress / total))
+    })
 
-        }).on('error', (e) => {
-          console.error(e);
+    read.pipe(write)
+
+    write.on('finish', () => {
+      console.log("Le fichier a bien été copié")
+      //Import request
+      http.get('http://localhost:3000/api/import', (res) => {
+        console.log('statusCode:', res.statusCode);
+        console.log('headers:', res.headers);
+        res.on('data', (d) => {
+          process.stdout.write(d);
         });
-      } catch (error) {
-        console.log('error')
 
-      }
-    });
-  } catch (error) {
-    console.log(error)
+      }).on('error', (e) => {
+        console.error(e);
+      });
+    })
 
-  }
+    // read.on('end', () => {
+    //   console.log("J'ai fini de lire le fichier")
+    //   //Import request
+    //   // http.get('http://localhost:3000/api/import', (res) => {
+    //   //   console.log('statusCode:', res.statusCode);
+    //   //   console.log('headers:', res.headers);
+    //   //   res.on('data', (d) => {
+    //   //     process.stdout.write(d);
+    //   //   });
+
+    //   // }).on('error', (e) => {
+    //   //   console.error(e);
+    //   // });
+    // })
+  })
+
+
+
+  // fs.readFile('./assets/test.csv', (err, data) => {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //   fs.writeFile('csvCache.csv', data, (err, data) => {
+  //     if (err) {
+  //       console.log()
+  //     } else {
+  //       //Import request
+  //       http.get('http://localhost:3000/api/import', (res) => {
+  //         console.log('statusCode:', res.statusCode);
+  //         console.log('headers:', res.headers);
+
+  //         res.on('data', (d) => {
+  //           process.stdout.write(d);
+  //         });
+
+  //       }).on('error', (e) => {
+  //         console.error(e);
+  //       });
+  //     }
+  //   })
+  // })
 
 });
 

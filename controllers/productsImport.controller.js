@@ -1,5 +1,5 @@
 const csv = require('csvtojson');
-const csvFilePath = './assets/csvCache.csv'
+const csvFilePath = './assets/test.csv'
 const fsExtra = require('fs-extra')
 
 
