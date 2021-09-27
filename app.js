@@ -22,49 +22,36 @@ mongoose.connect(process.env.MONGO_CONNECT).then(() => {
 }).catch(err => { console.log("Erreur de connexion: " + err) })
 // const client = new MongoClient(uri);
 
+//Watch csv
+// const csv = './assets';
+// console.log(`Watching for file changes on ${csv}`);
 
-const csv = './assets';
-console.log(`Watching for file changes on ${csv}`);
-
-let md5Previous = null;
-let fsWait = false;
-
-
-fs.watch(csv, (event, filename) => {
-  if (filename) {
-    if (fsWait) return;
-    fsWait = setTimeout(() => {
-      fsWait = false;
-    }, 100);
-    const md5Current = md5(fs.readFileSync(csv));
-    if (md5Current === md5Previous) {
-      return;
-    }
-    md5Previous = md5Current;
-    console.log(`${filename} file Changed`);
+// let md5Previous = null;
+// let fsWait = false;
 
 
+// fs.watch(csv, (event, filename) => {
+//   if (filename) {
+//     if (fsWait) return;
+//     fsWait = setTimeout(() => {
+//       fsWait = false;
+//     }, 100);
+//     const md5Current = md5(fs.readFileSync(csv));
+//     if (md5Current === md5Previous) {
+//       return;
+//     }
+//     md5Previous = md5Current;
+//     console.log(`${filename} file Changed`);
 
-  }
-});
+
+
+//   }
+// });
+
+//Routes Api
 
 app.use('/api/', productRoute)
 
 
-// let ac = new AbortController();
-// const { signal } = ac;
-// setTimeout(() => ac.abort(), 10000);
-
-// (async () => {
-//   try {
-//     const watcher = watch('./assets/test.csv', { signal });
-//     for await (const event of watcher)
-//       console.log(event);
-//   } catch (err) {
-//     if (err.name === 'AbortError')
-//       return;
-//     throw err;
-//   }
-// })();
 
 module.exports = app
