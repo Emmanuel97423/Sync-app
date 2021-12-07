@@ -72,13 +72,13 @@ watcher.on('change', (path) => {
 //Routes Api
 const CronJob = require('cron').CronJob;
 const job = new CronJob(
-  '* * * * * *',
+  '* * 1 * * *',
   () => {
-    console.log('You will see this message every second');
+    console.log('Mise à jour toute les 1h OK - date' + new Date());
 
 
 
-    
+
 
 
   },
