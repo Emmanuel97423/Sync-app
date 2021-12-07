@@ -66,10 +66,28 @@ watcher.on('change', (path) => {
   }
 }).on('error', error => log(`Watcher error: ${error}`))
 
-
+//Cron job
 
 
 //Routes Api
+const CronJob = require('cron').CronJob;
+const job = new CronJob(
+  '* * * * * *',
+  () => {
+    console.log('You will see this message every second');
+
+
+
+    
+
+
+  },
+  null,
+  true,
+  'Indian/Reunion'
+);
+// Use this if the 4th param is default value(false)
+job.start()
 
 app.use('/api/', productRoute)
 
