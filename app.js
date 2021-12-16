@@ -47,23 +47,25 @@ const watcher = chokidar.watch(filePath, {
 
 watcher.on('change', (path) => {
   console.log(`File ${path} has been changed`)
-  try {
-    //Import request
+  setTimeout(() => {
+    try {
+      //Import request
 
-    http.get('http://localhost:3000/api/import', (res) => {
-      console.log('statusCode:', res.statusCode);
-      console.log('headers:', res.headers);
-      res.on('data', (d) => {
-        process.stdout.write(d);
+      http.get('http://localhost:3000/api/import', (res) => {
+        console.log('statusCode:', res.statusCode);
+        console.log('headers:', res.headers);
+        res.on('data', (d) => {
+          process.stdout.write(d);
+        });
+
+      }).on('error', (e) => {
+        console.error(e);
       });
+    } catch (error) {
+      console.log(error)
 
-    }).on('error', (e) => {
-      console.error(e);
-    });
-  } catch (error) {
-    console.log(error)
-
-  }
+    }
+  }, 60000)
 }).on('error', error => log(`Watcher error: ${error}`))
 
 //Cron job
