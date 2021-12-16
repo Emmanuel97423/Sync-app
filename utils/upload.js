@@ -50,8 +50,8 @@ export class UploadToCloud {
                             console.log("Impossible de supprimer l'image: " + error)
                         }
                     } else {
-                        console.log("Image: " + this._filename + " upload errooooor!")
-                        console.log(error)
+                        console.log("Image: " + this._filename + " upload errooooor!: " + error)
+
                         return error
                     }
                 })

@@ -2,10 +2,7 @@ const csv = require('csvtojson');
 const csvFilePath = './assets/test.csv'
 const fsExtra = require('fs-extra')
 
-
 import { sendProduct } from '../utils/sendProduct.js'
-
-
 
 exports.convertToJson = async (req, res, next) => {
     const directory = './assets/images/'
@@ -16,7 +13,7 @@ exports.convertToJson = async (req, res, next) => {
         const data = await csv({
 
             noheader: false,
-            headers: ['codeArticle', 'libelle', 'PVHT', 'PVTTC', 'codeBar', 'image1'],
+            headers: ['codeArticle', 'libelle', 'PVHT', 'PVTTC', 'codeBar', 'stock', 'description', 'image1'],
             trim: true,
         }).fromFile(csvFilePath);
 

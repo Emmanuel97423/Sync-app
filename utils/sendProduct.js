@@ -34,24 +34,42 @@ export const sendProduct = (base64str, filename, productName, dataObject) => {
 
                         try {
                             //Send data product to MongoDB
-                            if (uploadResult._urlImg) {
-                                console.log('URL:', uploadResult._urlImg)
-                                console.log('Libellé:', dataObject.libelle)
-                                console.log('Prix HT:', parseFloat(dataObject.PVHT))
-                                Product.findOne({ name: dataObject.libelle }).then((name) => {
-                                    if (name) {
+                            if (uploadResult._urlImg != null) {
+                                // console.log('URL:', uploadResult._urlImg)
+                                // console.log('Libellé:', dataObject.libelle)
+                                // console.log('Prix HT:', parseFloat(dataObject.PVHT))
+                                Product.findOne({ codeArticle: dataObject.codeArticle }).then((codeArticle) => {
+                                    if (codeArticle) {
                                         console.log("L'Article " + dataObject.libelle + " est déjà existant")
-                                    } else {
-                                        const product = new Product({
+
+                                        Product.updateOne({ codeArticle: dataObject.codeArticle }, {
+                                            codeArticle: dataObject.codeArticle,
                                             name: dataObject.libelle,
                                             imageUrl: uploadResult._urlImg,
-                                            price: parseFloat(dataObject.PVHT),
+                                            priceHt: parseFloat(dataObject.PVHT),
+                                            priceTtc: parseFloat(dataObject.PVTTC),
+                                            description: dataObject.description,
+                                            quantity: dataObject.stock
+                                        }).then((res) => {
+                                            console.log('Nombre de document modifié: ' + res.modifiedCount)
+                                        }).catch((err) => { console.log('Erreur de modification: ' + err) })
+                                    } else {
+                                        const product = new Product({
+                                            codeArticle: dataObject.codeArticle,
+                                            name: dataObject.libelle,
+                                            imageUrl: uploadResult._urlImg,
+                                            priceHt: parseFloat(dataObject.PVHT),
+                                            priceTtc: parseFloat(dataObject.PVTTC),
+                                            description: dataObject.description,
+                                            quantity: dataObject.stock
                                         });
                                         product.save().then(() => console.log("Produit enregister sur la base de données"))
                                             .catch((error) => console.log(error));
                                     }
                                 }).catch((error) => console.log(error));
 
+                            } else {
+                                console.log("image absente")
                             }
 
 
