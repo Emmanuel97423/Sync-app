@@ -20,7 +20,7 @@ export const sendProduct = (base64str, filename, productName, dataObject) => {
 
             //Resize Image
             try {
-                const resizeResult = new ResizeClass(img, imgResize, 400, 350);
+                const resizeResult = new ResizeClass(img, imgResize, 360, 540);
                 resizeResult.resize
                 // console.log('resizeResult:', resizeResult.resize)
 
