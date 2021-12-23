@@ -65,7 +65,11 @@ watcher.on('change', (path) => {
       console.log(error)
 
     }
+<<<<<<< HEAD
   }, 20000)
+=======
+  }, 6000)
+>>>>>>> 7e13deca5f208a04d0270aeb457f4ce2db36deac
 }).on('error', error => log(`Watcher error: ${error}`))
 
 //Cron job
