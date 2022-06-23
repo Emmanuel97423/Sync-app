@@ -1,8 +1,11 @@
 const csv = require('csvtojson');
-const csvFilePath = './assets/test.csv'
-const fsExtra = require('fs-extra')
+const csvFilePath = './assets/test.csv';
+const fsExtra = require('fs-extra');
+import { sendProduct } from '../utils/sendProduct.js';
+const ProductGamme = require('../models/productGamme.model');
+const Gamme = require('../models/gamme.model');
 
-import { sendProduct } from '../utils/sendProduct.js'
+
 
 exports.convertToJson = async (req, res, next) => {
     const directory = './assets/images/'
@@ -68,6 +71,99 @@ exports.convertToJson = async (req, res, next) => {
         res.status(500).send(error.message)
     }
 
+}
+
+exports.sendProductGamme = async (req, res, next) => {
+    const csvProductGammesPath = './assets/article-game-txt.csv'
+    try {
+        const data = await csv({
+            noheader: false,
+            headers: ['codeArticleGamme', 'libelle', 'libelleFamille', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description'],
+            trim: true,
+        }).fromFile(csvProductGammesPath);
+
+        try {
+            data.map((product) => {
+
+                ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, {
+                    upsert: true,
+                }, (error, productGamme) => {
+                    if (error) {
+                        console.log('error:', error)
+                        res.status(500).json({ error: error })
+                    }
+                    if (productGamme === null) {
+                        const productGamme = new ProductGamme({
+                            ...product,
+                            tva: product.tva,
+                            pvTtc: parseFloat(product.pvTtc),
+                            pvHt: parseFloat(product.pvHt)
+                        });
+                        try {
+                            productGamme.save();
+                        } catch (error) {
+                            console.log('error:', error)
+
+                        }
+                    }
+                    console.log('productGamme:', productGamme)
+                })
+
+            })
+        } catch (error) {
+            console.log('error:', error)
+            res.status(500).send(error.message)
+        }
+    } catch (error) {
+        console.log('error:', error)
+        res.status(500).send(error.message)
+    }
+}
+
+exports.sendGamme = async (req, res, next) => {
+    const csvGamme = './assets/export-gammes-txt.csv';
+    try {
+        const data = await csv({
+
+            noheader: false,
+            headers: ['gammeCode', 'libelle', 'elementsGammeLibelle'],
+            trim: true,
+        }).fromFile(csvGamme);
+
+        try {
+            data.map((result) => {
+                console.log('result:', result)
+                Gamme.findOneAndUpdate({ gammeCode: result.gammeCode }, {
+                }, (error, gamme) => {
+                    if (error) {
+                        console.log('error:', error)
+                        res.status(500).json({ error: error })
+                    }
+                    if (gamme === null) {
+                        console.log('gamme:', gamme)
+                        const gammeSchema = new Gamme({
+                            gammeCode: result.gammeCode,
+                            libelle: result.libelle,
+                            elementsGammeLibelle: result.elementsGammeLibelle,
+                        });
+                        console.log('gammeSchema:', gammeSchema)
+                        try {
+                            gammeSchema.save();
+                        } catch (error) {
+                            console.log('error:', error)
+                        }
+                    }
+                })
+
+            })
+        } catch (error) {
+            console.log('error:', error)
+            res.status(500).send(error.message)
+        }
+    } catch (error) {
+        console.log('error:', error)
+        res.status(500).send(error.message)
+    }
 }
 
 
