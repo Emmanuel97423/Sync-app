@@ -1,23 +1,29 @@
 const sharp = require('sharp');
 const fs = require('fs');
-// sharp.cache(false);
+const cloudinary = require('cloudinary');
+require('dotenv').config()
 
-// const resize = async (img, imgResizeName, width) => {
+//Cloudinary config
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+});
 
-//     try {
-//         await sharp(img).resize(width).toFile(imgResizeName)
-//     }
-//     catch (err) {
-//         console.log(err)
-//     }
-// }
 
 export class ResizeClass {
-    constructor(img, imgResizeName, width, height) {
+    constructor(img, imgResizeName, width, height, filename) {
         this._img = img;
         this._imgResizeName = imgResizeName;
         this._width = width;
         this._height = height;
+        this._filename = filename;
+        this._imageUrl = ""
+
+    }
+    get imageUrl() { return this._imageUrl }
+    get uploadResult() {
+        return this._uploadResult;
     }
 
     get resize() {
@@ -25,25 +31,74 @@ export class ResizeClass {
     };
 
     async resizeMedium() {
+
         try {
 
-            await sharp(this._img).resize(this._width, this._height, {
+            const resizeBySharp = await sharp(this._img).resize(this._width, this._height, {
+
                 fit: 'cover',
                 position: 'center',
             }).toFile(this._imgResizeName);
-            console.log('Image: ' + this._imgResizeName + ' redimensionné!')
-            try {
-                fs.unlinkSync(this._img)
-                console.log('Supression image:' + this._imgResizeName + ' Réussi!')
-            } catch (error) {
-                console.log('La suppression à échoué: ' + error)
+
+            if (resizeBySharp) {
+                fs.unlink(this._img, async (error) => {
+                    if (error) {
+                        console.log(error)
+                        return
+                    }
+                    else {
+                        try {
+
+                            return await cloudinary.v2.uploader.upload(this._imgResizeName,
+
+                                { public_id: this._filename }, (error, result) => {
+                                    if (result) {
+
+                                        try {
+
+                                            fs.unlink(this._imgResizeName, (error) => {
+                                                if (error) {
+                                                    console.log('fs.unlink error:', error)
+                                                } else {
+                                                    console.log('Fichier supprimer: ' + this._imgResizeName)
+                                                    // console.log('result:', result.secure_url)
+                                                    this._imageUrl = result.secure_url
+                                                    return result.secure_url
+
+                                                }
+                                            })
+
+                                        } catch (error) {
+                                            console.log('error:', error)
+
+                                        }
+
+
+                                    } else {
+                                        console.log("Image: " + this._filename + " upload errooooor!: " + error)
+
+                                    }
+                                })
+                        } catch (error) {
+                            console.log('error:', error)
+
+                        }
+
+
+                    }
+                })
+
 
             }
+
+
         }
         catch (err) {
-            console.log("Le redimensionnement a échoué la Poooo!: Format d'image invalide!")
-            return false
+            console.log('err:', err)
         }
-    }
-}
 
+
+
+    }
+
+}

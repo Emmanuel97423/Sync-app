@@ -3,27 +3,29 @@ const mongoose = require("mongoose");
 const productSchema = mongoose.Schema({
     ean: { type: Number, required: false },
     codeArticle: { type: String, required: true },
-    codeGamme: { type: String, required: false, ref: "productGamme" },
+    codeGamme: { type: String, required: false },
+    gammesValue: { type: String, required: false },
+    gamme: { type: String, required: false },
     codeFamille: { type: String, required: false },
-    libelleFamille: { type: String, required: true },
+    libelleFamille: { type: String, required: false },
     codeSousFamille: { type: String, required: false },
     libelleSousFamille: { type: String, required: false },
     libelle: { type: String, required: false },
-    category: { type: String, required: true },
     type: { type: String, required: false },
-    manufacturer: { type: String, required: false },
+    brand: { type: String, required: false },
     shortDescription: { type: String, required: false },
     description: { type: String, required: false },
     size: { type: String, required: false },
     color: { type: String, required: false },
     weight: { type: String, required: false },
     imageUrl: { type: String, required: false },
-    costPrice: { type: Number, required: false },
-    priceHt: { type: Number, required: false },
-    priceTtc: { type: Number, required: false },
+
+    pvHt: { type: Number, required: false },
+    pvTtc: { type: Number, required: false },
     stock: { type: Number, default: 1, min: 0 },
     actived: { type: String, required: false },
-    tva: { type: Number, required: false },
+    tva: { type: String, required: false },
+    productGamme: { type: mongoose.Schema.Types.ObjectId, ref: 'ProductGamme' }
 });
 
 module.exports = mongoose.model("Product", productSchema);

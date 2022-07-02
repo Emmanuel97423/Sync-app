@@ -1,3 +1,0 @@
-﻿Code article gamme,Libellé,Libellé de la famille article,Libellé de la sous-famille article,Nom du fournisseur,PV HT,Taux de TVA,PV TTC,Gammes, Description
-"AG00001","LYCRA LONG CASTELLANI","VÊTEMENTS BALL TRAP","","CASTELLANI","64.52000000","8.50","70.00000000","GA00001¤GA00002", "Description"
-"AG00003","DOUDOUNE CASTELLANI","VÊTEMENTS BALL TRAP","","","73.73000000","8.50","80.00000000","GA00001¤GA00002", "Description"

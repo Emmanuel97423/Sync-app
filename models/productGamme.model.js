@@ -7,8 +7,10 @@ const productGammeSchema = mongoose.Schema({
     brand: { type: String, required: false },
     pvHt: { type: Number, required: true },
     tva: { type: String, required: true },
+    imageUrl: { type: String, required: false },
     pvTtc: { type: Number, required: true },
     description: { type: String, required: false },
+    variantId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }]
 })
 
 module.exports = mongoose.model("ProductGamme", productGammeSchema)

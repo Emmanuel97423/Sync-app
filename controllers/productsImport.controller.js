@@ -6,19 +6,20 @@ const ProductGamme = require('../models/productGamme.model');
 const Gamme = require('../models/gamme.model');
 
 
-
 exports.convertToJson = async (req, res, next) => {
     const directory = './assets/images/'
+    const productsCsv = './assets/articles-copy-txt.csv'
 
     //Convert to bas64 and send to server
     try {
 
         const data = await csv({
 
+
             noheader: false,
-            headers: ['codeArticle', 'libelle', 'PVHT', 'PVTTC', 'codeBar', 'stock', 'description', 'image1'],
+            headers: ['codeArticle', 'libelle', 'codeFamille', 'libelleFamille', 'codeSousFamille', 'libelleSousFamille', 'pvHt', 'tva', 'pvTtc', 'brand', 'imageUrl', 'stock', 'ean', 'codeGamme', 'gammesValue', 'gamme'],
             trim: true,
-        }).fromFile(csvFilePath);
+        }).fromFile(productsCsv);
 
         //Loop data json
 
@@ -27,29 +28,32 @@ exports.convertToJson = async (req, res, next) => {
             let dataObject = data[key];
             //Product name
             let productName = data[key].libelle;
-            // console.log('productName:', productName)
+
+
             //to lower case product name
             productName = productName.toLowerCase().replace(/\s/g, '-')
 
             let imageName = productName
             // let imageUrl = "./assets/images/" + imageName
             //Convert base64 to file
-            let base64String = data[key].image1;
+            let base64String = data[key].imageUrl;
 
             if (base64String) {
 
                 try {
+
                     sendProduct(base64String, imageName, productName, dataObject)
+
 
                     setTimeout(() => {
                         try {
 
                             fsExtra.emptyDirSync(directory)
-                            console.log("Supression image en cache terminé")
-                            console.log("message: Import envoyé")
+                            // console.log("Supression image en cache terminé")
+                            // console.log("message: Import envoyé")
                             return res.status(201).send({ message: 'Import envoyé' })
                         } catch (error) {
-                            console.log("La suppression des images du dossier à échouer: " + error)
+                            // console.log("La suppression des images du dossier à échouer: " + error)
 
                         }
 
@@ -74,11 +78,12 @@ exports.convertToJson = async (req, res, next) => {
 }
 
 exports.sendProductGamme = async (req, res, next) => {
-    const csvProductGammesPath = './assets/article-game-txt.csv'
+
+    const csvProductGammesPath = './assets/article-gamme-txt.csv'
     try {
         const data = await csv({
             noheader: false,
-            headers: ['codeArticleGamme', 'libelle', 'libelleFamille', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description'],
+            headers: ['codeArticleGamme', 'libelle', 'libelleFamille', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description', 'imageBase64'],
             trim: true,
         }).fromFile(csvProductGammesPath);
 
@@ -86,7 +91,7 @@ exports.sendProductGamme = async (req, res, next) => {
             data.map((product) => {
 
                 ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, {
-                    upsert: true,
+                    // upsert: true,
                 }, (error, productGamme) => {
                     if (error) {
                         console.log('error:', error)
@@ -100,13 +105,20 @@ exports.sendProductGamme = async (req, res, next) => {
                             pvHt: parseFloat(product.pvHt)
                         });
                         try {
-                            productGamme.save();
+                            productGamme.save((error, result) => {
+                                if (error) { console.log('error:', error) }
+                                if (result) {
+                                    console.log("Article Gammes enregistré")
+                                    // res.status(200).json(result)
+                                }
+
+                            });
                         } catch (error) {
                             console.log('error:', error)
 
                         }
                     }
-                    console.log('productGamme:', productGamme)
+                    // console.log('productGamme:', productGamme)
                 })
 
             })

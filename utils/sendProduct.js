@@ -1,5 +1,6 @@
 import { ResizeClass } from './resizeImage.js'
 import { UploadToCloud } from './upload.js'
+import { ConvertGamme } from './convertGamme.js'
 
 const fs = require('fs');
 const path = require('path');
@@ -16,15 +17,11 @@ export const sendProduct = (base64str, filename, productName, dataObject) => {
         } else {
             const img = './assets/images/' + filename;
             const imgResize = './assets/images/Resize' + filename;
-
-
             //Resize Image
             try {
                 const resizeResult = new ResizeClass(img, imgResize, 360, 540);
                 resizeResult.resize
                 // console.log('resizeResult:', resizeResult.resize)
-
-
                 //Upload Image
 
                 try {
@@ -39,29 +36,39 @@ export const sendProduct = (base64str, filename, productName, dataObject) => {
                                 // console.log('Libellé:', dataObject.libelle)
                                 // console.log('Prix HT:', parseFloat(dataObject.PVHT))
                                 Product.findOne({ codeArticle: dataObject.codeArticle }).then((codeArticle) => {
+
+                                    // const convertGamme = new ConvertGamme(dataObject);
+                                    // convertGamme.getGammes.map(gamme => { console.log('gammes', gamme) })
+                                    // console.log('convertGamme:', convertGamme.getGammes)
+                                    // return
                                     if (codeArticle) {
                                         console.log("L'Article " + dataObject.libelle + " est déjà existant")
 
                                         Product.updateOne({ codeArticle: dataObject.codeArticle }, {
-                                            codeArticle: dataObject.codeArticle,
-                                            name: dataObject.libelle,
+                                            ...dataObject,
+                                            // codeArticle: dataObject.codeArticle,
+                                            // name: dataObject.libelle,
                                             imageUrl: uploadResult._urlImg,
-                                            priceHt: parseFloat(dataObject.PVHT),
-                                            priceTtc: parseFloat(dataObject.PVTTC),
-                                            description: dataObject.description,
-                                            quantity: dataObject.stock
+                                            pvHt: parseFloat(dataObject.pvHt),
+                                            pvTtc: parseFloat(dataObject.pvTtc),
+                                            // description: dataObject.description,
+                                            // quantity: dataObject.stock
                                         }).then((res) => {
                                             console.log('Nombre de document modifié: ' + res.modifiedCount)
                                         }).catch((err) => { console.log('Erreur de modification: ' + err) })
                                     } else {
                                         const product = new Product({
-                                            codeArticle: dataObject.codeArticle,
-                                            name: dataObject.libelle,
+                                            ...dataObject,
                                             imageUrl: uploadResult._urlImg,
-                                            priceHt: parseFloat(dataObject.PVHT),
-                                            priceTtc: parseFloat(dataObject.PVTTC),
-                                            description: dataObject.description,
-                                            quantity: dataObject.stock
+                                            pvHt: parseFloat(dataObject.pvHt),
+                                            pvTtc: parseFloat(dataObject.pvTtc),
+                                            // codeArticle: dataObject.codeArticle,
+                                            // name: dataObject.libelle,
+                                            // imageUrl: uploadResult._urlImg,
+                                            // priceHt: parseFloat(dataObject.PVHT),
+                                            // priceTtc: parseFloat(dataObject.PVTTC),
+                                            // description: dataObject.description,
+                                            // quantity: dataObject.stock
                                         });
                                         product.save().then(() => console.log("Produit enregister sur la base de données"))
                                             .catch((error) => console.log(error));
@@ -69,7 +76,7 @@ export const sendProduct = (base64str, filename, productName, dataObject) => {
                                 }).catch((error) => console.log(error));
 
                             } else {
-                                console.log("image absente")
+                                // console.log("image absente")
                             }
 
 
@@ -79,7 +86,7 @@ export const sendProduct = (base64str, filename, productName, dataObject) => {
 
                         }
                     }, 8000)
-                    console.log('Import terminé!')
+                    // console.log('Import terminé!')
                 } catch (error) {
                     console.log('Import échoué!')
                     console.log("error", error)

@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
-const productRoute = require('./routes/productsImport.route')
+const productRoute = require('./routes/productsImport.route');
+const productsRoute = require('./routes/products.route')
+
 const http = require('http');
 const fs = require('fs');
 const mongoose = require('mongoose');
@@ -93,7 +95,9 @@ const job = new CronJob(
 // Use this if the 4th param is default value(false)
 job.start()
 
-app.use('/api/', productRoute)
+app.use('/api/', productRoute);
+app.use('/api/', productsRoute)
+
 
 
 

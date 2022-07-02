@@ -30,7 +30,7 @@ export class UploadToCloud {
         return this.uploadMethod()
     }
     uploadMethod() {
-        console.log('this._imgResize:', this._imgResize)
+        // console.log('this._imgResize:', this._imgResize)
         // try {
         setTimeout(() => {
             cloudinary.v2.uploader.upload(this._imgResize, {
@@ -42,15 +42,15 @@ export class UploadToCloud {
                         // console.log('result:', result)
 
                         this._result = result;
-                        this._urlImg = result.url
-                        console.log("Image: " + this._filename + " uploader avec succée!")
+                        this._urlImg = result.url;
+                        // console.log("Image: " + this._filename + " uploader avec succée!")
                         try {
                             fs.unlinkSync(this._imgResize)
                         } catch (error) {
                             console.log("Impossible de supprimer l'image: " + error)
                         }
                     } else {
-                        console.log("Image: " + this._filename + " upload errooooor!: " + error)
+                        // console.log("Image: " + this._filename + " upload errooooor!: " + error)
 
                         return error
                     }
