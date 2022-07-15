@@ -1,15 +1,15 @@
 // const { Product, ProductGamme, Gamme } = require('../../models/index');
 const mongoose = require('mongoose');
-const ProductGamme = require('../../models/productGamme.model')
-const Product = require('../../models/product.model')
+const ProductGamme = require('../../models/productGamme.model');
+const Product = require('../../models/product.model');
+const Gamme = require('../../models/gamme.model')
 const csv = require('csvtojson');
-const request = require('request')
+const request = require('request');
 const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
-import { ResizeClass } from '../resizeImage.js'
 const cloudinary = require('cloudinary');
-require('dotenv').config()
+require('dotenv').config();
 
 //Cloudinary access config
 cloudinary.config({
@@ -29,6 +29,9 @@ export default class ConvertProduct {
         this._productData = ""
         this._productGammesData = ""
         this._gammesData = ""
+        this._gammesArrayTemp = []
+        this._gammesValueArrayTemp = []
+
     }
     // set setImageUrl(imageUrl) { this._imageUrl = imageUrl }
     get getImageUrl() { return this._imageUrl }
@@ -41,7 +44,7 @@ export default class ConvertProduct {
     //Convert CSV to Json for product CSV
 
     async productCsvToJson() {
-        let resizeResponse = false;
+
         try {
             //Import CSV
             const jsonToCsvData = await csv({
@@ -100,47 +103,144 @@ export default class ConvertProduct {
                                                                 //Upload Image to Cloudinary
                                                                 return cloudinary.v2.uploader.upload(imgResize,
 
-                                                                    { public_id: filename }, (error, result) => {
-                                                                        if (result) {
-                                                                            // console.log('result:', result.secure_url)
-                                                                            this._imageUrl = result.secure_url;
-                                                                            console.log('dataObject.codeArticle:', dataObject.codeArticle)
+                                                                    { public_id: filename }, (error, cloudinaryResult) => {
+                                                                        //Callback convert Gammes to Array
+                                                                        const gammeConverted = (data, callback) => {
+
+                                                                            if (data.gamme) {
+                                                                                // const newArr = []
+                                                                                const gammesArray = data.gamme.replace('¤', ' ').split(' ')
+                                                                                const gammesValueArray = data.gammesValue.replace('¤', ' ').split(' ')
+
+                                                                                setTimeout(() => {
+                                                                                    gammesArray.map((gamme) => {
+
+                                                                                        Gamme.findOne({ gammeCode: gamme }, (error, result) => {
+                                                                                            if (error) console.log(error);
+                                                                                            if (result) {
+
+
+                                                                                                this._gammesArrayTemp.push(result.libelle)
+                                                                                                // console.log('this._gammesArrayTemp:', this._gammesArrayTemp)
+
+                                                                                            }
+                                                                                        })
+                                                                                    })
+                                                                                }, 3000)
+                                                                                setTimeout(() => {
+                                                                                    gammesValueArray.map((gamme) => {
+                                                                                        console.log('gamme:', gamme)
+
+                                                                                        Gamme.findOne({ gammeCode: gamme }, (error, result) => {
+                                                                                            if (error) console.log(error);
+                                                                                            if (result) {
+                                                                                                console.log('result gamme value:', result)
+
+
+
+                                                                                                this._gammesValueArrayTemp.push(result.libelle)
+                                                                                                console.log(' this._gammesValueArrayTemp:', this._gammesValueArrayTemp)
+
+                                                                                                // console.log('this._gammesArrayTemp:', this._gammesArrayTemp)
+
+                                                                                            }
+                                                                                        })
+                                                                                    })
+                                                                                }, 4000)
+
+                                                                                setTimeout(() => {
+                                                                                    let resultat = {
+
+
+                                                                                        gammesValue: this._gammesValueArrayTemp,
+                                                                                        gamme: this._gammesArrayTemp
+                                                                                    }
+
+                                                                                    console.log('resultat:', resultat)
+                                                                                    callback(null, resultat);
+                                                                                }, 5000)
+                                                                            }
+
+                                                                        }
+
+                                                                        if (cloudinaryResult) {
+
+
+
                                                                             //Import to Database 
                                                                             try {
                                                                                 Product.findOne({ codeArticle: dataObject.codeArticle }, (error, product) => {
+                                                                                    //Convert Gammes
+                                                                                    const pvHt = parseInt(dataObject.pvHt)
+                                                                                    const pvTtc = parseInt(dataObject.pvTtc)
 
-
+                                                                                    //Callback
+                                                                                    if (error) console.log('error:', error)
                                                                                     if (!product) {
-                                                                                        console.log("Product inexistant");
-                                                                                        const pvHt = parseInt(dataObject.pvHt)
+                                                                                        gammeConverted(dataObject, (error, result) => {
+                                                                                            if (error) console.log('error:', error)
+                                                                                            if (result) {
+                                                                                                setTimeout(() => {
+                                                                                                    const productModel = new Product({
+                                                                                                        ...dataObject,
+                                                                                                        pvHt: pvHt,
+                                                                                                        pvTtc: pvTtc,
+                                                                                                        // stock: stock,
+                                                                                                        imageUrl: cloudinaryResult.secure_url,
+                                                                                                        gammesValueConvert: {
+                                                                                                            gammesValue: [...new Set(result.gammesValue)],
+                                                                                                            gammes: [...new Set(result.gamme)]
 
-                                                                                        const pvTtc = parseInt(dataObject.pvTtc)
+                                                                                                        }
 
-                                                                                        // const stock = parseInt(dataObject.stock)
+                                                                                                    });
+                                                                                                    productModel.save((error, result) => {
+                                                                                                        if (error) console.log('error:', error)
+                                                                                                        if (result) {
+                                                                                                            console.log('result save model:', result)
+
+                                                                                                        }
 
 
-                                                                                        const productModel = new Product({
-                                                                                            ...dataObject,
-                                                                                            pvHt: pvHt,
-                                                                                            pvTtc: pvTtc,
-                                                                                            // stock: stock,
-                                                                                            imageUrl: result.secure_url
+
+                                                                                                    })
+                                                                                                }, 2000)
+
+                                                                                            }
                                                                                         })
-                                                                                        try {
-                                                                                            productModel.save((error, result) => {
-                                                                                                if (result) console.log('result:', result.codeArticle)
 
 
-                                                                                                if (error) console.log('error:', error)
-                                                                                            })
-                                                                                        } catch (error) {
 
-                                                                                        }
+
+
+                                                                                    };
+                                                                                    if (product) {
+                                                                                        gammeConverted(dataObject, (error, result) => {
+                                                                                            if (error) console.log(error);
+                                                                                            if (result) {
+
+                                                                                                setTimeout(() => {
+                                                                                                    Product.findOneAndUpdate({ codeArticle: dataObject.codeArticle }, {
+                                                                                                        ...dataObject,
+                                                                                                        pvHt: pvHt,
+                                                                                                        pvTtc: pvTtc,
+                                                                                                        imageUrl: cloudinaryResult.secure_url,
+                                                                                                        gammesValueConvert: {
+                                                                                                            gammesValue: [...new Set(result.gammesValue)],
+                                                                                                            gammes: [...new Set(this._gammesArrayTemp)]
+                                                                                                        }
+                                                                                                    }, (error, result) => {
+
+                                                                                                        if (error) console.log(error);
+                                                                                                        if (result) console.log('result update product:', result);
+                                                                                                    })
+                                                                                                }, 5000)
+                                                                                            }
+                                                                                        })
+
+
                                                                                     }
-                                                                                    if (error) {
-                                                                                        console.log('error:', error)
 
-                                                                                    }
 
                                                                                 })
                                                                             } catch (error) {
@@ -161,7 +261,7 @@ export default class ConvertProduct {
                                                                             } catch (error) {
                                                                                 console.log('error:', error)
                                                                             }
-                                                                            return result
+
                                                                         } else {
                                                                             console.log("Image: " + filename + " upload errooooor!: " + error)
                                                                         }
@@ -250,13 +350,13 @@ export default class ConvertProduct {
                                     if (products) {
 
                                         products.map((product) => {
-                                            ProductGamme.updateOne({ codeArticleGamme: product.codeGamme }, { $pull: { variantId: product._id } }, (error, result) => {
+                                            ProductGamme.updateOne({ codeArticleGamme: product.codeGamme }, { $set: { variantId: [] } }, (error, result) => {
                                                 if (error) console.error(error);
                                                 if (result) {
                                                     ProductGamme.updateOne({ codeArticleGamme: product.codeGamme }, { $push: { variantId: product._id } }, (error, productG) => {
                                                         if (error) console.log(error);
                                                         if (productG) {
-                                                            console.log('productG:', productG)
+                                                            // console.log('productG:', productG)
 
 
                                                         }
