@@ -64,10 +64,10 @@ export default class ConvertProduct {
 
                         let imageUrl = dataObject.imageUrl
                         this._productData = dataObject;
+                        const forceConvert = true
 
 
-
-                        if (imageUrl) {
+                        if (imageUrl || forceConvert) {
                             //Convert image base64 to png
                             let buf = Buffer.from(imageUrl, 'base64');
                             let img = './assets/images/' + filename;
@@ -75,11 +75,12 @@ export default class ConvertProduct {
 
                             try {
                                 //Create image
-                                return fs.writeFile(path.join('./assets/images/', filename), buf, async (error) => {
+                                return fs.writeFile(path.join('./assets/images/', filename), buf, async (error, info) => {
 
                                     if (error) {
                                         console.log({ 'error': error, 'message': 'Image invalide:' + filename })
-                                    } else {
+                                    }
+                                    if (info || forceConvert) {
                                         try {
                                             //Resize Image product
                                             return sharp(img).resize(360, 540, {
@@ -88,88 +89,98 @@ export default class ConvertProduct {
                                             }).toFile(imgResize, (err, info) => {
                                                 if (err) {
                                                     console.log(err);
+                                                    fs.unlink(img, (error, info) => {
+                                                        if (error) console.log(error)
+                                                        if (info) console.log(info)
+                                                    })
 
-                                                } else {
+                                                }
+                                                if (info || forceConvert) {
 
                                                     try {
 
                                                         //DeleteImage temp
 
-                                                        return fs.unlink(img, (error) => {
+                                                        return fs.unlink(img, (error, info) => {
                                                             if (error) {
                                                                 console.log(error)
                                                             }
-                                                            else {
+                                                            if (info || forceConvert) {
                                                                 //Upload Image to Cloudinary
                                                                 return cloudinary.v2.uploader.upload(imgResize,
 
                                                                     { public_id: filename }, (error, cloudinaryResult) => {
                                                                         //Callback convert Gammes to Array
-                                                                        const gammeConverted = (data, callback) => {
-
-                                                                            if (data.gamme) {
-                                                                                // const newArr = []
-                                                                                const gammesArray = data.gamme.replace('¤', ' ').split(' ')
-                                                                                const gammesValueArray = data.gammesValue.replace('¤', ' ').split(' ')
-
-                                                                                setTimeout(() => {
-                                                                                    gammesArray.map((gamme) => {
-
-                                                                                        Gamme.findOne({ gammeCode: gamme }, (error, result) => {
-                                                                                            if (error) console.log(error);
-                                                                                            if (result) {
-
-
-                                                                                                this._gammesArrayTemp.push(result.libelle)
-                                                                                                // console.log('this._gammesArrayTemp:', this._gammesArrayTemp)
-
-                                                                                            }
-                                                                                        })
-                                                                                    })
-                                                                                }, 3000)
-                                                                                setTimeout(() => {
-                                                                                    gammesValueArray.map((gamme) => {
-                                                                                        console.log('gamme:', gamme)
-
-                                                                                        Gamme.findOne({ gammeCode: gamme }, (error, result) => {
-                                                                                            if (error) console.log(error);
-                                                                                            if (result) {
-                                                                                                console.log('result gamme value:', result)
+                                                                        // const gammeConverted = (data, callback) => {
+                                                                        //     let gammeArrayTemp = []
+                                                                        //     let gammeValueArrayTemp = []
+                                                                        //     if (data.gamme) {
 
 
 
-                                                                                                this._gammesValueArrayTemp.push(result.libelle)
-                                                                                                console.log(' this._gammesValueArrayTemp:', this._gammesValueArrayTemp)
 
-                                                                                                // console.log('this._gammesArrayTemp:', this._gammesArrayTemp)
+                                                                        //         try {
+                                                                        //             gammesArray.map((gamme) => {
 
-                                                                                            }
-                                                                                        })
-                                                                                    })
-                                                                                }, 4000)
+                                                                        //                 Gamme.findOne({ gammeCode: gamme }, (error, result) => {
+                                                                        //                     if (error) console.log(error);
+                                                                        //                     if (result) {
 
-                                                                                setTimeout(() => {
-                                                                                    let resultat = {
+                                                                        //                         gammeArrayTemp.push(result.libelle)
+                                                                        //                         // this._gammesArrayTemp.push(result.libelle)
+                                                                        //                         // console.log('this._gammesArrayTemp:', this._gammesArrayTemp)
+
+                                                                        //                     }
+                                                                        //                 })
+                                                                        //             })
 
 
-                                                                                        gammesValue: this._gammesValueArrayTemp,
-                                                                                        gamme: this._gammesArrayTemp
-                                                                                    }
+                                                                        //             gammesValueArray.map((gamme) => {
 
-                                                                                    console.log('resultat:', resultat)
-                                                                                    callback(null, resultat);
-                                                                                }, 5000)
-                                                                            }
+                                                                        //                 Gamme.findOne({ gammeCode: gamme }, (error, result) => {
+                                                                        //                     if (error) console.log(error);
+                                                                        //                     if (result) {
+                                                                        //                         // this._gammesValueArrayTemp.push(result.libelle)
+                                                                        //                         gammeValueArrayTemp.push(result.libelle)
+                                                                        //                         // console.log('this._gammesArrayTemp:', this._gammesArrayTemp)
 
-                                                                        }
+                                                                        //                     }
+                                                                        //                 })
+                                                                        //             });
 
-                                                                        if (cloudinaryResult) {
+                                                                        //         } catch (error) {
+                                                                        //             console.log("🚀 ~ file: convertClasse.js ~ line 147 ~ ConvertProduct ~ gammeConverted ~ error", error)
+
+                                                                        //         }
+
+
+
+
+                                                                        //         setTimeout(() => {
+
+                                                                        //             let resultat = {
+
+
+                                                                        //                 gammesValue: gammesValueArray,
+                                                                        //                 gamme: gammesArray
+                                                                        //             }
+                                                                        //             callback(null, resultat);
+                                                                        //             console.log("🚀 ~ file: convertClasse.js ~ line 162 ~ ConvertProduct ~ setTimeout ~ resultat", resultat)
+                                                                        //         }, 6000)
+
+                                                                        //     }
+
+                                                                        // }
+
+                                                                        if (cloudinaryResult || forceConvert) {
 
 
 
                                                                             //Import to Database 
                                                                             try {
                                                                                 Product.findOne({ codeArticle: dataObject.codeArticle }, (error, product) => {
+
+                                                                                    console.log("dataObject", dataObject)
                                                                                     //Convert Gammes
                                                                                     const pvHt = parseInt(dataObject.pvHt)
                                                                                     const pvTtc = parseInt(dataObject.pvTtc)
@@ -177,72 +188,77 @@ export default class ConvertProduct {
                                                                                     //Callback
                                                                                     if (error) console.log('error:', error)
                                                                                     if (!product) {
-                                                                                        gammeConverted(dataObject, (error, result) => {
+                                                                                        // const gammesArray = dataObject.gamme.replace('¤', ' ').split(' ')
+                                                                                        // console.log("🚀 ~ file: convertClasse.js ~ line 184 ~ ConvertProduct ~ Product.findOne ~ dataObject.gamme", dataObject.gamme)
+                                                                                        // const gammesValueArray = dataObject.gammesValue.replace('¤', ' ').split(' ')
+                                                                                        //gamme Convert callback
+                                                                                        // gammeConverted(dataObject, (error, result) => {
+                                                                                        //     if (error) console.log('error:', error)
+                                                                                        //     if (result)
+
+                                                                                        //     }
+                                                                                        // })
+
+
+                                                                                        const productModel = new Product({
+                                                                                            ...dataObject,
+                                                                                            isAProductGamme: false,
+
+                                                                                            pvHt: pvHt,
+                                                                                            pvTtc: pvTtc,
+                                                                                            // stock: stock,
+                                                                                            imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : "https://dummyimage.com/640x360/fff/aaa",
+                                                                                            gammesValueConvert: {
+                                                                                                gammesValue: dataObject.gammesValue ? dataObject.gammesValue.replace('¤', ' ').split(' ') : null,
+                                                                                                gammes: dataObject.gamme ? dataObject.gamme.replace('¤', ' ').split(' ') : null,
+
+                                                                                            },
+
+                                                                                        });
+                                                                                        productModel.save((error, result) => {
                                                                                             if (error) console.log('error:', error)
                                                                                             if (result) {
-                                                                                                setTimeout(() => {
-                                                                                                    const productModel = new Product({
-                                                                                                        ...dataObject,
-                                                                                                        pvHt: pvHt,
-                                                                                                        pvTtc: pvTtc,
-                                                                                                        // stock: stock,
-                                                                                                        imageUrl: cloudinaryResult.secure_url,
-                                                                                                        gammesValueConvert: {
-                                                                                                            gammesValue: [...new Set(result.gammesValue)],
-                                                                                                            gammes: [...new Set(result.gamme)]
-
-                                                                                                        }
-
-                                                                                                    });
-                                                                                                    productModel.save((error, result) => {
-                                                                                                        if (error) console.log('error:', error)
-                                                                                                        if (result) {
-                                                                                                            console.log('result save model:', result)
-
-                                                                                                        }
-
-
-
-                                                                                                    })
-                                                                                                }, 2000)
+                                                                                                console.log('result save model:', result)
 
                                                                                             }
+
                                                                                         })
-
-
-
 
 
                                                                                     };
+                                                                                    console.log("🚀 ~ file: convertClasse.js ~ line 228 ~ ConvertProduct ~ Product.findOne ~ dataObject", dataObject)
                                                                                     if (product) {
-                                                                                        gammeConverted(dataObject, (error, result) => {
+
+                                                                                        Product.findOneAndUpdate({ codeArticle: product.codeArticle }, {
+                                                                                            ...product,
+                                                                                            pvHt: pvHt,
+                                                                                            pvTtc: pvTtc,
+                                                                                            imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : "https://dummyimage.com/640x360/fff/aaa",
+                                                                                            gammesValueConvert: {
+                                                                                                gammesValue: product.gamme ? product.gamme.replace('¤', ' ').split(' ') : null,
+                                                                                                gammes: product.gammesValue ? product.gamme.replace('¤', ' ').split(' ') : null,
+                                                                                            },
+                                                                                            isAProductGamme: false,
+
+                                                                                        }, (error, result) => {
+
                                                                                             if (error) console.log(error);
-                                                                                            if (result) {
-
-                                                                                                setTimeout(() => {
-                                                                                                    Product.findOneAndUpdate({ codeArticle: dataObject.codeArticle }, {
-                                                                                                        ...dataObject,
-                                                                                                        pvHt: pvHt,
-                                                                                                        pvTtc: pvTtc,
-                                                                                                        imageUrl: cloudinaryResult.secure_url,
-                                                                                                        gammesValueConvert: {
-                                                                                                            gammesValue: [...new Set(result.gammesValue)],
-                                                                                                            gammes: [...new Set(this._gammesArrayTemp)]
-                                                                                                        }
-                                                                                                    }, (error, result) => {
-
-                                                                                                        if (error) console.log(error);
-                                                                                                        if (result) console.log('result update product:', result);
-                                                                                                    })
-                                                                                                }, 5000)
-                                                                                            }
+                                                                                            if (result) console.log('result update product:', result);
                                                                                         })
+                                                                                        // gammeConverted(dataObject, (error, result) => {
+                                                                                        //     if (error) console.log(error);
+                                                                                        //     if (result) {
+
+
+                                                                                        //     }
+                                                                                        // })
 
 
                                                                                     }
 
 
                                                                                 })
+                                                                                console.log("🚀 ~ file: convertClasse.js ~ line 258 ~ ConvertProduct ~ Product.findOne ~ dataObject", dataObject)
                                                                             } catch (error) {
                                                                                 console.log('error:', error)
 
@@ -335,11 +351,7 @@ export default class ConvertProduct {
                     // console.log('this._imageUrl:', this._imageUrl)
                     jsonToCsvData.map((productGamme) => {
 
-                        console.log('productGamme.codeArticleGamme:', productGamme.codeArticleGamme)
-
                         ProductGamme.findOne({ codeArticleGamme: productGamme.codeArticleGamme }, (error, productGamme) => {
-
-
 
                             if (error) console.log(error);
                             if (productGamme) {
@@ -350,13 +362,16 @@ export default class ConvertProduct {
                                     if (products) {
 
                                         products.map((product) => {
+
                                             ProductGamme.updateOne({ codeArticleGamme: product.codeGamme }, { $set: { variantId: [] } }, (error, result) => {
                                                 if (error) console.error(error);
                                                 if (result) {
-                                                    ProductGamme.updateOne({ codeArticleGamme: product.codeGamme }, { $push: { variantId: product._id } }, (error, productG) => {
+                                                    console.log("🚀 ~ file: convertClasse.js ~ line 356 ~ ProductGamme.updateOne ~ result", result)
+                                                    ProductGamme.updateOne({ codeArticleGamme: product.codeGamme }, { $push: { variantId: product.codeArticle } }, (error, productG) => {
                                                         if (error) console.log(error);
                                                         if (productG) {
-                                                            // console.log('productG:', productG)
+                                                            console.log("🚀 ~ file: convertClasse.js ~ line 358 ~ ProductGamme.updateOne ~ productG", productG)
+
 
 
                                                         }
@@ -367,6 +382,8 @@ export default class ConvertProduct {
 
 
                                         })
+
+
 
                                     }
 

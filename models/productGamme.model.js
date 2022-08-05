@@ -10,7 +10,8 @@ const productGammeSchema = mongoose.Schema({
     imageUrl: { type: String, required: false },
     pvTtc: { type: Number, required: true },
     description: { type: String, required: false },
-    variantId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }]
+    isAProductGamme: { type: Boolean, required: true },
+    variantId: [{ type: Array, ref: 'Product' }]
 })
 
 module.exports = mongoose.model("ProductGamme", productGammeSchema)

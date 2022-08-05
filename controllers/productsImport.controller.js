@@ -8,7 +8,7 @@ const Gamme = require('../models/gamme.model');
 
 exports.convertToJson = async (req, res, next) => {
     const directory = './assets/images/'
-    const productsCsv = './assets/articles-copy-txt.csv'
+    const productsCsv = './assets/import/production/articles.txt'
 
     //Convert to bas64 and send to server
     try {
@@ -79,7 +79,8 @@ exports.convertToJson = async (req, res, next) => {
 
 exports.sendProductGamme = async (req, res, next) => {
 
-    const csvProductGammesPath = './assets/article-gamme-txt.csv'
+
+    const csvProductGammesPath = './assets/import/production/articles-gamme.txt'
     try {
         const data = await csv({
             noheader: false,
@@ -89,6 +90,7 @@ exports.sendProductGamme = async (req, res, next) => {
 
         try {
             data.map((product) => {
+
 
                 ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, {
                     // upsert: true,
@@ -102,7 +104,8 @@ exports.sendProductGamme = async (req, res, next) => {
                             ...product,
                             tva: product.tva,
                             pvTtc: parseFloat(product.pvTtc),
-                            pvHt: parseFloat(product.pvHt)
+                            pvHt: parseFloat(product.pvHt),
+                            isAProductGamme: true
                         });
                         try {
                             productGamme.save((error, result) => {
@@ -117,6 +120,15 @@ exports.sendProductGamme = async (req, res, next) => {
                             console.log('error:', error)
 
                         }
+                    } else {
+
+                        ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, { ...product, isAProductGamme: true }, (error, result) => {
+                            if (error) console.log('error:', error)
+                            if (result) {
+                                console.log("🚀 ~ file: productsImport.controller.js ~ line 126 ~ ProductGamme.findOneAndUpdate ~ result", result)
+
+                            }
+                        })
                     }
                     // console.log('productGamme:', productGamme)
                 })
@@ -133,7 +145,7 @@ exports.sendProductGamme = async (req, res, next) => {
 }
 
 exports.sendGamme = async (req, res, next) => {
-    const csvGamme = './assets/export-gammes-txt.csv';
+    const csvGamme = './assets/import/production/gammes.txt'
     try {
         const data = await csv({
 
