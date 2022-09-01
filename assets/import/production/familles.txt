@@ -1,3 +1,3 @@
-Code Famille Articles,Famille Articles
+﻿Code Famille Articles,Famille Articles
 "FAR00002","ACCESSOIRES BALL TRAP"
-"FAR00001","V�TEMENTS BALL TRAP"
+"FAR00001","VÊTEMENTS BALL TRAP"

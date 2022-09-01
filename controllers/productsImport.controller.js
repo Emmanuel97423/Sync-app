@@ -84,12 +84,13 @@ exports.sendProductGamme = async (req, res, next) => {
     try {
         const data = await csv({
             noheader: false,
-            headers: ['codeArticleGamme', 'libelle', 'libelleFamille', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description', 'imageBase64'],
+            headers: ['codeArticleGamme', 'libelle', 'codeFamille', 'libelleFamille', 'codeSousArticle', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description', 'imageBase64'],
             trim: true,
         }).fromFile(csvProductGammesPath);
 
         try {
             data.map((product) => {
+                console.log("🚀 ~ file: productsImport.controller.js ~ line 93 ~ data.map ~ product", product.codeFamille)
 
 
                 ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, {
@@ -111,6 +112,7 @@ exports.sendProductGamme = async (req, res, next) => {
                             productGamme.save((error, result) => {
                                 if (error) { console.log('error:', error) }
                                 if (result) {
+                                    console.log("🚀 ~ file: productsImport.controller.js ~ line 114 ~ productGamme.save ~ result", result)
                                     console.log("Article Gammes enregistré")
                                     // res.status(200).json(result)
                                 }
@@ -150,7 +152,7 @@ exports.sendGamme = async (req, res, next) => {
         const data = await csv({
 
             noheader: false,
-            headers: ['gammeCode', 'libelle', 'elementsGammeLibelle'],
+            headers: ['gammeCode', 'libelle', 'elementsGammeLibelle', 'gammeValue'],
             trim: true,
         }).fromFile(csvGamme);
 
@@ -169,6 +171,7 @@ exports.sendGamme = async (req, res, next) => {
                             gammeCode: result.gammeCode,
                             libelle: result.libelle,
                             elementsGammeLibelle: result.elementsGammeLibelle,
+                            gammeValue: result.gammeValue
                         });
                         console.log('gammeSchema:', gammeSchema)
                         try {

@@ -1,10 +1,7 @@
 // const { Product, ProductGamme, Gamme } = require('../../models/index');
-const mongoose = require('mongoose');
 const ProductGamme = require('../../models/productGamme.model');
 const Product = require('../../models/product.model');
-const Gamme = require('../../models/gamme.model')
 const csv = require('csvtojson');
-const request = require('request');
 const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
@@ -185,6 +182,8 @@ export default class ConvertProduct {
                                                                                     const pvHt = parseInt(dataObject.pvHt)
                                                                                     const pvTtc = parseInt(dataObject.pvTtc)
 
+                                                                                    // console.log("🚀 ~ file: convertClasse.js ~ line 189 ~ ConvertProduct ~ Product.findOne ~ dataObject.gamme.replace('¤', ' .')split(' ')", dataObject.gamme.split('¤'))
+                                                                                    // return
                                                                                     //Callback
                                                                                     if (error) console.log('error:', error)
                                                                                     if (!product) {
@@ -209,8 +208,8 @@ export default class ConvertProduct {
                                                                                             // stock: stock,
                                                                                             imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : "https://dummyimage.com/640x360/fff/aaa",
                                                                                             gammesValueConvert: {
-                                                                                                gammesValue: dataObject.gammesValue ? dataObject.gammesValue.replace('¤', ' ').split(' ') : null,
-                                                                                                gammes: dataObject.gamme ? dataObject.gamme.replace('¤', ' ').split(' ') : null,
+                                                                                                gammesValue: dataObject.gammesValue ? dataObject.gammesValue.split('¤') : null,
+                                                                                                gammes: dataObject.gamme ? dataObject.gamme.split('¤') : null,
 
                                                                                             },
 
@@ -230,17 +229,20 @@ export default class ConvertProduct {
                                                                                     if (product) {
 
                                                                                         Product.findOneAndUpdate({ codeArticle: product.codeArticle }, {
-                                                                                            ...product,
-                                                                                            pvHt: pvHt,
-                                                                                            pvTtc: pvTtc,
-                                                                                            imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : "https://dummyimage.com/640x360/fff/aaa",
-                                                                                            gammesValueConvert: {
-                                                                                                gammesValue: product.gamme ? product.gamme.replace('¤', ' ').split(' ') : null,
-                                                                                                gammes: product.gammesValue ? product.gamme.replace('¤', ' ').split(' ') : null,
-                                                                                            },
-                                                                                            isAProductGamme: false,
+                                                                                            $set: {
+                                                                                                ...product,
+                                                                                                pvHt: pvHt,
+                                                                                                pvTtc: pvTtc,
+                                                                                                imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : "https://dummyimage.com/640x360/fff/aaa",
+                                                                                                gammesValueConvert: {
+                                                                                                    gammesValue: product.gammesValue ? product.gammesValue.split('¤') : null,
+                                                                                                    gammes: product.gamme ? product.gamme.split('¤') : null,
+                                                                                                },
+                                                                                                isAProductGamme: false,
+                                                                                            }
 
-                                                                                        }, (error, result) => {
+
+                                                                                        }, { new: true }, (error, result) => {
 
                                                                                             if (error) console.log(error);
                                                                                             if (result) console.log('result update product:', result);

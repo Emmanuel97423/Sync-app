@@ -26,7 +26,10 @@ const productSchema = mongoose.Schema({
     tva: { type: String, required: false },
     isAProductGamme: { type: Boolean, required: false },
     productGamme: { type: mongoose.Schema.Types.ObjectId, ref: 'ProductGamme' },
-    gammesValueConvert: { type: Object, required: false },
+    gammesValueConvert: {
+        gammesValue: { type: Array, required: false },
+        gammes: { type: Array, required: false }
+    },
 
 });
 
