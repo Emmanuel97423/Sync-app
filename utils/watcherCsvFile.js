@@ -21,7 +21,12 @@ const sousFamilleFile = "./assets/import/production/sous-famille.txt";
 
 const watcherCsvFile = async () => {
 
-    const watcher = chokidar.watch(filesPath, { persistent: true, awaitWriteFinish: true });
+    const watcher = chokidar.watch(filesPath, {
+        persistent: true, awaitWriteFinish: {
+            stabilityThreshold: 5000,
+            pollInterval: 500
+        }
+    });
 
     watcher.on("change", async (event, path) => {
         await Promise.all([
