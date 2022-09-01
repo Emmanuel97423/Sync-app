@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
 const productRoute = require('./routes/productsImport.route');
-const productsRoute = require('./routes/products.route')
+const productsRoute = require('./routes/products.route');
+const categoryRoute = require('./routes/category.route')
 
 const http = require('http');
 const fs = require('fs');
 const mongoose = require('mongoose');
+
+// Watcher
+const watcherFile = require('./utils/watcherCsvFile')
 
 
 
@@ -33,47 +37,48 @@ mongoose.connect(process.env.MONGO_CONNECT).then(() => {
   console.log("Connexion à la base de données réussi")
 }).catch(err => { console.log("Erreur de connexion: " + err) })
 // const client = new MongoClient(uri);
-const filePath = "./assets/test.csv"
+// const filePath = "./assets/test.csv"
 
-const chokidar = require('chokidar');
+// const chokidar = require('chokidar');
 
 // Initialize watcher.
-const watcher = chokidar.watch(filePath, {
-  ignored: /(^|[\/\\])\../, // ignore dotfiles
-  persistent: true,
-  ignoreInitial: true,
-  awaitWriteFinish: {
-    stabilityThreshold: 2000,
-    pollInterval: 100
-  },
-  alwaysStat: true,
-});
+// const watcher = chokidar.watch(filePath, {
+//   ignored: /(^|[\/\\])\../, // ignore dotfiles
+//   persistent: true,
+//   ignoreInitial: true,
+//   awaitWriteFinish: {
+//     stabilityThreshold: 2000,
+//     pollInterval: 100
+//   },
+//   alwaysStat: true,
+// });
 
-watcher.on('change', (path) => {
-  console.log(`File ${path} has been changed`)
-  setTimeout(() => {
-    try {
-      //Import request
+// watcher.on('change', (path) => {
+//   console.log(`File ${path} has been changed`)
+//   setTimeout(() => {
+//     try {
+//       //Import request
 
-      http.get('http://localhost:3000/api/import', (res) => {
-        console.log('statusCode:', res.statusCode);
-        console.log('headers:', res.headers);
-        res.on('data', (d) => {
-          process.stdout.write(d);
-        });
+//       http.get('http://localhost:3000/api/import', (res) => {
+//         console.log('statusCode:', res.statusCode);
+//         console.log('headers:', res.headers);
+//         res.on('data', (d) => {
+//           process.stdout.write(d);
+//         });
 
-      }).on('error', (e) => {
-        console.error(e);
-      });
-    } catch (error) {
-      console.log(error)
+//       }).on('error', (e) => {
+//         console.error(e);
+//       });
+//     } catch (error) {
+//       console.log(error)
 
-    }
-  }, 20000)
-}).on('error', error => log(`Watcher error: ${error}`))
+//     }
+//   }, 20000)
+// }).on('error', error => log(`Watcher error: ${error}`))
 
 //Cron job
 
+app.get(watcherFile)
 
 //Routes Api
 const CronJob = require('cron').CronJob;
@@ -95,8 +100,9 @@ const job = new CronJob(
 // Use this if the 4th param is default value(false)
 job.start()
 
-app.use('/api/', productRoute);
-app.use('/api/', productsRoute)
+app.use('/api', productRoute);
+app.use('/api', productsRoute);
+app.use('/api', categoryRoute);
 
 
 

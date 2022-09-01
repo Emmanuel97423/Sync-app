@@ -18,14 +18,19 @@ const productSchema = mongoose.Schema({
     size: { type: String, required: false },
     color: { type: String, required: false },
     weight: { type: String, required: false },
-    imageUrl: { type: String, required: false },
-
-    pvHt: { type: Number, required: false },
-    pvTtc: { type: Number, required: false },
+    imageUrl: { type: String, required: true },
+    pvHt: { type: Number, default: 0, required: false },
+    pvTtc: { type: Number, default: 0, required: false },
     stock: { type: Number, default: 1, min: 0 },
     actived: { type: String, required: false },
     tva: { type: String, required: false },
-    productGamme: { type: mongoose.Schema.Types.ObjectId, ref: 'ProductGamme' }
+    isAProductGamme: { type: Boolean, required: false },
+    productGamme: { type: mongoose.Schema.Types.ObjectId, ref: 'ProductGamme' },
+    gammesValueConvert: {
+        gammesValue: { type: Array, required: false },
+        gammes: { type: Array, required: false }
+    },
+
 });
 
 module.exports = mongoose.model("Product", productSchema);

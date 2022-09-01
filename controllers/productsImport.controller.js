@@ -8,7 +8,7 @@ const Gamme = require('../models/gamme.model');
 
 exports.convertToJson = async (req, res, next) => {
     const directory = './assets/images/'
-    const productsCsv = './assets/articles-copy-txt.csv'
+    const productsCsv = './assets/import/production/articles.txt'
 
     //Convert to bas64 and send to server
     try {
@@ -79,16 +79,19 @@ exports.convertToJson = async (req, res, next) => {
 
 exports.sendProductGamme = async (req, res, next) => {
 
-    const csvProductGammesPath = './assets/article-gamme-txt.csv'
+
+    const csvProductGammesPath = './assets/import/production/articles-gamme.txt'
     try {
         const data = await csv({
             noheader: false,
-            headers: ['codeArticleGamme', 'libelle', 'libelleFamille', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description', 'imageBase64'],
+            headers: ['codeArticleGamme', 'libelle', 'codeFamille', 'libelleFamille', 'codeSousArticle', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description', 'imageBase64'],
             trim: true,
         }).fromFile(csvProductGammesPath);
 
         try {
             data.map((product) => {
+                console.log("🚀 ~ file: productsImport.controller.js ~ line 93 ~ data.map ~ product", product.codeFamille)
+
 
                 ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, {
                     // upsert: true,
@@ -102,12 +105,14 @@ exports.sendProductGamme = async (req, res, next) => {
                             ...product,
                             tva: product.tva,
                             pvTtc: parseFloat(product.pvTtc),
-                            pvHt: parseFloat(product.pvHt)
+                            pvHt: parseFloat(product.pvHt),
+                            isAProductGamme: true
                         });
                         try {
                             productGamme.save((error, result) => {
                                 if (error) { console.log('error:', error) }
                                 if (result) {
+                                    console.log("🚀 ~ file: productsImport.controller.js ~ line 114 ~ productGamme.save ~ result", result)
                                     console.log("Article Gammes enregistré")
                                     // res.status(200).json(result)
                                 }
@@ -117,6 +122,15 @@ exports.sendProductGamme = async (req, res, next) => {
                             console.log('error:', error)
 
                         }
+                    } else {
+
+                        ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, { ...product, isAProductGamme: true }, (error, result) => {
+                            if (error) console.log('error:', error)
+                            if (result) {
+                                console.log("🚀 ~ file: productsImport.controller.js ~ line 126 ~ ProductGamme.findOneAndUpdate ~ result", result)
+
+                            }
+                        })
                     }
                     // console.log('productGamme:', productGamme)
                 })
@@ -133,12 +147,12 @@ exports.sendProductGamme = async (req, res, next) => {
 }
 
 exports.sendGamme = async (req, res, next) => {
-    const csvGamme = './assets/export-gammes-txt.csv';
+    const csvGamme = './assets/import/production/gammes.txt'
     try {
         const data = await csv({
 
             noheader: false,
-            headers: ['gammeCode', 'libelle', 'elementsGammeLibelle'],
+            headers: ['gammeCode', 'libelle', 'elementsGammeLibelle', 'gammeValue'],
             trim: true,
         }).fromFile(csvGamme);
 
@@ -157,6 +171,7 @@ exports.sendGamme = async (req, res, next) => {
                             gammeCode: result.gammeCode,
                             libelle: result.libelle,
                             elementsGammeLibelle: result.elementsGammeLibelle,
+                            gammeValue: result.gammeValue
                         });
                         console.log('gammeSchema:', gammeSchema)
                         try {

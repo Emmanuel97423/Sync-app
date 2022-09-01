@@ -4,6 +4,7 @@ const gammeSchema = mongoose.Schema({
     gammeCode: { type: String, required: true },
     libelle: { type: String, required: true },
     elementsGammeLibelle: { type: String, required: true },
+    gammeValue: { type: String, required: true },
 
 });
 

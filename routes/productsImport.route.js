@@ -6,6 +6,6 @@ const upload = require('../middleware/upload')
 
 router.get('/import', productsImportCtrl.convertToJson)
 router.post('/import', upload, productsImportCtrl.convertToJson)
-router.post('/import/product-gammes', upload, productsImportCtrl.sendProductGamme)
-router.post('/import/gammes', upload, productsImportCtrl.sendGamme)
+router.get('/import/product-gammes', upload, productsImportCtrl.sendProductGamme)
+router.get('/import/gammes', upload, productsImportCtrl.sendGamme)
 module.exports = router;
