@@ -4,7 +4,7 @@ const CronJob = require('cron').CronJob;
 const job = new CronJob(
     '15 * * * *',
     () => {
-        console.log('You will see this message every minute');
+        console.log('You will see this message every 15 minute');
         exec('"C:/Program Files/EBP/PointOfSale21.1FRFR30/EBP.Invoicing.Application.exe" /BatchFile="D:/Documents/Exo-trap/EBP/Synchronisation/Sync-app/assets/import/batch/ebp-export.txt"', (error, stdout, stderr) => {
             if (error) console.log({ error });
             console.log({ stdout });
