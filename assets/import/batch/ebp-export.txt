@@ -1,7 +1,7 @@
 /Database=D:\Documents\Exo Trap.ebp;SDKDEV;Dropknee97460?
+/Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles.txt;RangeItems;export-articles-gamme
 /Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles.txt;Items;Export-articles
 /Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles.txt;RangeTypes;export-gamme
-/Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles.txt;RangeItems;export-articles-gamme
 /Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles.txt;ItemFamilies;export-famille
 /Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles.txt;ItemSubFamilies;export-sous-famille
 
