@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 
 // Watcher
 const watcherFile = require('./utils/watcherCsvFile')
+const cronJobSdk = require('./utils/cronJobSdk')
 
 
 
@@ -36,69 +37,15 @@ app.use(express.urlencoded({ extended: true }))
 mongoose.connect(process.env.MONGO_CONNECT).then(() => {
   console.log("Connexion à la base de données réussi")
 }).catch(err => { console.log("Erreur de connexion: " + err) })
-// const client = new MongoClient(uri);
-// const filePath = "./assets/test.csv"
 
-// const chokidar = require('chokidar');
 
-// Initialize watcher.
-// const watcher = chokidar.watch(filePath, {
-//   ignored: /(^|[\/\\])\../, // ignore dotfiles
-//   persistent: true,
-//   ignoreInitial: true,
-//   awaitWriteFinish: {
-//     stabilityThreshold: 2000,
-//     pollInterval: 100
-//   },
-//   alwaysStat: true,
-// });
-
-// watcher.on('change', (path) => {
-//   console.log(`File ${path} has been changed`)
-//   setTimeout(() => {
-//     try {
-//       //Import request
-
-//       http.get('http://localhost:3000/api/import', (res) => {
-//         console.log('statusCode:', res.statusCode);
-//         console.log('headers:', res.headers);
-//         res.on('data', (d) => {
-//           process.stdout.write(d);
-//         });
-
-//       }).on('error', (e) => {
-//         console.error(e);
-//       });
-//     } catch (error) {
-//       console.log(error)
-
-//     }
-//   }, 20000)
-// }).on('error', error => log(`Watcher error: ${error}`))
-
-//Cron job
-
+//Cron job 
+app.get(cronJobSdk)
+//watcherFile
 app.get(watcherFile)
 
 //Routes Api
-const CronJob = require('cron').CronJob;
-const job = new CronJob(
-  ' * * * * *',
-  () => {
-    console.log('You will see this message every minute');
 
-
-
-
-
-
-  },
-  null,
-  true,
-  'Indian/Reunion'
-);
-// Use this if the 4th param is default value(false)
-job.start()
 
 app.use('/api', productRoute);
 app.use('/api', productsRoute);
