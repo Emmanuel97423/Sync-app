@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 
 const CronJob = require('cron').CronJob;
 const job = new CronJob(
-    '5 * * * *',
+    '*/5 * * * *',
     () => {
         console.log('You will see this message every 5 minute');
         exec('"C:/Program Files/EBP/PointOfSale21.1FRFR30/EBP.Invoicing.Application.exe" /BatchFile="D:/Documents/Exo-trap/EBP/Synchronisation/Sync-app/assets/import/batch/ebp-export.txt"', (error, stdout, stderr) => {
