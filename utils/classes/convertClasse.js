@@ -217,7 +217,8 @@ export default class ConvertProduct {
                                                                                         productModel.save((error, result) => {
                                                                                             if (error) console.log('error:', error)
                                                                                             if (result) {
-                                                                                                console.log('result save model:', result)
+                                                                                                console.log('result save model:', result);
+
 
                                                                                             }
 
