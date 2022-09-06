@@ -5,7 +5,7 @@ const job = new CronJob(
     '*/1 * * * *',
     () => {
         console.log('You will see this message every 5 minute');
-        exec('C:/ProgramFiles/EBP/PointOfSale21.1FRFR30/EBP.Invoicing.Application.exe/BatchFile="D:/Documents/Exo-trap/EBP/Synchronisation/Sync-app/assets/import/batch/ebp-export.txt"', (error, stdout, stderr) => {
+        exec('C:/ProgramFiles/EBP/PointOfSale21.1FRFR30/EBP.Invoicing.Application.exe/ BatchFile="d:/Documents/Exo-trap/EBP/Synchronisation/Sync-app/assets/import/batch/ebp-export.txt"', (error, stdout, stderr) => {
             if (error) console.log({ error });
             console.log({ stdout });
             console.error({ stderr });
