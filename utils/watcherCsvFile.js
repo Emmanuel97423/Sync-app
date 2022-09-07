@@ -23,7 +23,7 @@ const watcherCsvFile = async () => {
 
     const watcher = chokidar.watch(filesPath, {
         persistent: true, awaitWriteFinish: {
-            stabilityThreshold: 5000,
+            stabilityThreshold: 15000,
             pollInterval: 1000
         }
     });
