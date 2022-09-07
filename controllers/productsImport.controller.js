@@ -90,29 +90,27 @@ exports.sendProductGamme = async (req, res, next) => {
 
         try {
             data.map((product) => {
-                console.log("🚀 ~ file: productsImport.controller.js ~ line 93 ~ data.map ~ product", product.codeFamille)
+                // console.log("🚀 ~ file: productsImport.controller.js ~ line 93 ~ data.map ~ product", product.codeFamille)
 
 
-                ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, {
-                    // upsert: true,
-                }, (error, productGamme) => {
+                ProductGamme.findOne({ codeArticleGamme: product.codeArticleGamme }, (error, productGamme) => {
                     if (error) {
                         console.log('error:', error)
                         res.status(500).json({ error: error })
                     }
-                    if (productGamme === null) {
+                    if (!productGamme) {
                         const productGamme = new ProductGamme({
                             ...product,
                             tva: product.tva,
                             pvTtc: parseFloat(product.pvTtc),
                             pvHt: parseFloat(product.pvHt),
+                            imageUrl: [],
                             isAProductGamme: true
                         });
                         try {
                             productGamme.save((error, result) => {
                                 if (error) { console.log('error:', error) }
                                 if (result) {
-                                    console.log("🚀 ~ file: productsImport.controller.js ~ line 114 ~ productGamme.save ~ result", result)
                                     console.log("Article Gammes enregistré")
                                     // res.status(200).json(result)
                                 }
@@ -127,7 +125,7 @@ exports.sendProductGamme = async (req, res, next) => {
                         ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, { ...product, isAProductGamme: true }, (error, result) => {
                             if (error) console.log('error:', error)
                             if (result) {
-                                console.log("🚀 ~ file: productsImport.controller.js ~ line 126 ~ ProductGamme.findOneAndUpdate ~ result", result)
+                                console.log('result:', result)
 
                             }
                         })
@@ -158,7 +156,6 @@ exports.sendGamme = async (req, res, next) => {
 
         try {
             data.map((result) => {
-                console.log('result:', result)
                 Gamme.findOneAndUpdate({ gammeCode: result.gammeCode }, {
                 }, (error, gamme) => {
                     if (error) {
@@ -166,14 +163,12 @@ exports.sendGamme = async (req, res, next) => {
                         res.status(500).json({ error: error })
                     }
                     if (gamme === null) {
-                        console.log('gamme:', gamme)
                         const gammeSchema = new Gamme({
                             gammeCode: result.gammeCode,
                             libelle: result.libelle,
                             elementsGammeLibelle: result.elementsGammeLibelle,
                             gammeValue: result.gammeValue
                         });
-                        console.log('gammeSchema:', gammeSchema)
                         try {
                             gammeSchema.save();
                         } catch (error) {

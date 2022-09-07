@@ -2,7 +2,6 @@
 const csv = require('csvtojson');
 const ProductGamme = require('../models/productGamme.model');
 const csvProductGammesPath = "./assets/import/production/articles-gamme.txt";
-console.log('csvProductGammesPath:', csvProductGammesPath)
 
 
 const convertProductGamme = async () => {
@@ -18,7 +17,6 @@ const convertProductGamme = async () => {
 
         try {
             data.map((product) => {
-                console.log("🚀 ~ file: productsImport.controller.js ~ line 93 ~ data.map ~ product", product.codeFamille)
 
 
                 ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, {
@@ -40,7 +38,6 @@ const convertProductGamme = async () => {
                             productGamme.save((error, result) => {
                                 if (error) { console.log('error:', error) }
                                 if (result) {
-                                    console.log("🚀 ~ file: productsImport.controller.js ~ line 114 ~ productGamme.save ~ result", result)
                                     console.log("Article Gammes enregistré")
                                     // res.status(200).json(result)
                                 }
@@ -55,7 +52,6 @@ const convertProductGamme = async () => {
                         ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, { ...product, isAProductGamme: true }, (error, result) => {
                             if (error) console.log('error:', error)
                             if (result) {
-                                console.log("🚀 ~ file: productsImport.controller.js ~ line 126 ~ ProductGamme.findOneAndUpdate ~ result", result)
 
                             }
                         })

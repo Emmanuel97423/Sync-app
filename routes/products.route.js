@@ -14,7 +14,11 @@ router.get('/products', async (req, res, next) => {
     // let productImageUrl = null;
 
     const convertProduct = new ConvertProduct(productsCsv, productGammeCsv, gammes);
-    await convertProduct.getProductCsvToJson
+    convertProduct.getProductCsvToJson.then((result) => {
+        console.log('result:', result)
+        res.status(202).json({ result })
+
+    })
 
 
 })
