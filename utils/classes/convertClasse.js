@@ -146,10 +146,30 @@ export default class ConvertProduct {
                                                                                         },
 
                                                                                     });
-                                                                                    productModel.save((error, result) => {
+                                                                                    productModel.save((error, resultSaveProduct) => {
                                                                                         if (error) console.log('error:', error)
-                                                                                        if (result) {
-                                                                                            // return result
+                                                                                        if (resultSaveProduct) {
+                                                                                            const codeGammes = resultSaveProduct.codeGamme
+                                                                                            ProductGamme.findOneAndUpdate({
+                                                                                                codeArticleGamme: codeGammes
+                                                                                            }, {
+                                                                                                $set: {
+                                                                                                    imageUrl: []
+                                                                                                }
+                                                                                            }, (error, resultFindOneAndUpdate) => {
+                                                                                                if (error) console.log('error:', error);
+                                                                                                if (resultFindOneAndUpdate) {
+                                                                                                    ProductGamme.findOneAndUpdate({
+                                                                                                        codeArticleGamme: codeGammes
+                                                                                                    }, { $push: { imageUrl: resultSaveProduct.imageUrl } }, (error, resultUpdateProductGamme) => {
+                                                                                                        if (error) console.log('error:', error);
+                                                                                                        if (resultUpdateProductGamme) {
+                                                                                                            console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)
+
+                                                                                                        }
+                                                                                                    })
+                                                                                                }
+                                                                                            })
 
 
                                                                                         }
@@ -178,8 +198,27 @@ export default class ConvertProduct {
 
                                                                                         if (error) console.log(error);
                                                                                         if (result) {
-                                                                                            console.log('result:', result)
-                                                                                            return result
+                                                                                            const codeGammes = result.codeGamme
+                                                                                            ProductGamme.findOneAndUpdate({
+                                                                                                codeArticleGamme: codeGammes
+                                                                                            }, {
+                                                                                                $set: {
+                                                                                                    imageUrl: []
+                                                                                                }
+                                                                                            }, (error, resultFindOneAndUpdate) => {
+                                                                                                if (error) console.log('error:', error);
+                                                                                                if (resultFindOneAndUpdate) {
+                                                                                                    ProductGamme.findOneAndUpdate({
+                                                                                                        codeArticleGamme: codeGammes
+                                                                                                    }, { $push: { imageUrl: result.imageUrl } }, (error, resultUpdateProductGamme) => {
+                                                                                                        if (error) console.log('error:', error);
+                                                                                                        if (resultUpdateProductGamme) {
+                                                                                                            console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)
+
+                                                                                                        }
+                                                                                                    })
+                                                                                                }
+                                                                                            })
                                                                                         }
                                                                                     })
 

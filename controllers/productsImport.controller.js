@@ -93,19 +93,18 @@ exports.sendProductGamme = async (req, res, next) => {
                 // console.log("🚀 ~ file: productsImport.controller.js ~ line 93 ~ data.map ~ product", product.codeFamille)
 
 
-                ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, {
-                    // upsert: true,
-                }, (error, productGamme) => {
+                ProductGamme.findOne({ codeArticleGamme: product.codeArticleGamme }, (error, productGamme) => {
                     if (error) {
                         console.log('error:', error)
                         res.status(500).json({ error: error })
                     }
-                    if (productGamme === null) {
+                    if (!productGamme) {
                         const productGamme = new ProductGamme({
                             ...product,
                             tva: product.tva,
                             pvTtc: parseFloat(product.pvTtc),
                             pvHt: parseFloat(product.pvHt),
+                            imageUrl: [],
                             isAProductGamme: true
                         });
                         try {
@@ -126,6 +125,7 @@ exports.sendProductGamme = async (req, res, next) => {
                         ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, { ...product, isAProductGamme: true }, (error, result) => {
                             if (error) console.log('error:', error)
                             if (result) {
+                                console.log('result:', result)
 
                             }
                         })
