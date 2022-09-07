@@ -40,9 +40,9 @@ mongoose.connect(process.env.MONGO_CONNECT).then(() => {
 
 
 //Cron job 
-app.get(cronJobSdk)
+// app.get(cronJobSdk)
 //watcherFile
-app.get(watcherFile)
+// app.get(watcherFile)
 
 //Routes Api
 
