@@ -145,47 +145,58 @@ exports.sendProductGamme = async (req, res, next) => {
 }
 
 exports.sendGamme = async (req, res, next) => {
-    const csvGamme = './assets/import/production/gammes.txt'
-    try {
-        const data = await csv({
+    const gammeArray = []
+    const csvGammeFile = './assets/import/production/gammes.txt';
+    await csv({
+        noheader: false,
+        headers: ['gammeCode', 'libelle', 'elementsGammeLibelle', 'gammeValue', 'ordreGamme'],
+        trim: true,
+        delimiter: ",",
 
-            noheader: false,
-            headers: ['gammeCode', 'libelle', 'elementsGammeLibelle', 'gammeValue'],
-            trim: true,
-        }).fromFile(csvGamme);
-
-        try {
-            data.map((result) => {
-                Gamme.findOneAndUpdate({ gammeCode: result.gammeCode }, {
-                }, (error, gamme) => {
-                    if (error) {
-                        console.log('error:', error)
-                        res.status(500).json({ error: error })
-                    }
-                    if (gamme === null) {
-                        const gammeSchema = new Gamme({
-                            gammeCode: result.gammeCode,
-                            libelle: result.libelle,
-                            elementsGammeLibelle: result.elementsGammeLibelle,
-                            gammeValue: result.gammeValue
-                        });
-                        try {
-                            gammeSchema.save();
-                        } catch (error) {
-                            console.log('error:', error)
+        fork: true,
+    }).fromFile(csvGammeFile).then((gammes) => {
+        gammes.map((gamme) => {
+            console.log('gamme:', gamme)
+            Gamme.findOneAndUpdate({ gammeCode: gamme.gammeCode }, {
+                $set: {
+                    gammeCode: gamme.gammeCode,
+                    libelle: gamme.libelle,
+                    elementsGammeLibelle: gamme.elementsGammeLibelle,
+                    gammeValue: gamme.gammeValue,
+                    ordreGamme: gamme.ordreGamme,
+                }
+            }, (error, gammeUpdateResult) => {
+                if (error) {
+                    console.log('error:', error)
+                    return res.status(500).json({ error: error })
+                }
+                if (!gammeUpdateResult) {
+                    const gammeSchema = new Gamme({
+                        gammeCode: gamme.gammeCode,
+                        libelle: gamme.libelle,
+                        elementsGammeLibelle: gamme.elementsGammeLibelle,
+                        gammeValue: gamme.gammeValue,
+                        order: gamme.ordreGamme
+                    });
+                    gammeSchema.save((error, gammeSaveResult) => {
+                        if (error) console.log(error);
+                        if (gammeSaveResult) {
+                            console.log("🚀 ~ file: productsImport.controller.js ~ line 175 ~ gammeSchema.save ~ result", gammeSaveResult)
+                            gammeArray.push(gammeSaveResult)
                         }
-                    }
-                })
+                    });
+                }
+                else {
+                    console.log('gammeUpdateResult:', gammeUpdateResult)
+                    gammeArray.push(gammeUpdateResult)
 
+
+                }
             })
-        } catch (error) {
-            console.log('error:', error)
-            res.status(500).send(error.message)
-        }
-    } catch (error) {
-        console.log('error:', error)
-        res.status(500).send(error.message)
-    }
+        })
+        return res.status(200).json({ message: 'Gamme enregisté: success' })
+    }).catch((error) => console.log(error));
+
 }
 
 

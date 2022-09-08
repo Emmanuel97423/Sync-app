@@ -84,11 +84,32 @@ export default class ConvertProduct {
                                 if (info || forceConvert) {
 
                                     try {
+                                        //Text on imageUrl
+                                        const width = 100;
+                                        const height = 80;
+                                        const text = "Exo-trap";
+
+                                        const svgImage = `
+    <svg width="${width}" height="${height}">
+      <style>
+      .title { fill: #001; font-size: 15px; font-weight: bold;}
+      </style>
+      <text x="50%" y="50%" text-anchor="middle" class="title">${text}</text>
+    </svg>
+    `;
+                                        const svgBuffer = Buffer.from(svgImage);
                                         //Resize Image product
-                                        return sharp(img).resize(500, 600, {
-                                            fit: 'cover',
+                                        return sharp(img).resize(510, 600, {
+                                            fit: 'contain',
                                             position: 'center',
-                                        }).toFile(imgResize, (err, info) => {
+                                            background: { r: 255, g: 255, b: 255 }
+                                        }).composite([
+                                            {
+                                                input: svgBuffer,
+                                                bottom: 0,
+                                                right: 0,
+                                            },
+                                        ]).toFile(imgResize, (err, info) => {
                                             if (err) {
                                                 console.log(err);
                                                 // fs.unlink(img, (error, info) => {
@@ -138,7 +159,7 @@ export default class ConvertProduct {
                                                                                         pvHt: pvHt,
                                                                                         pvTtc: pvTtc,
                                                                                         // stock: stock,
-                                                                                        imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : "https://dummyimage.com/640x360/fff/aaa",
+                                                                                        imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : null,
                                                                                         gammesValueConvert: {
                                                                                             gammesValue: dataObject.gammesValue ? dataObject.gammesValue.split('¤') : null,
                                                                                             gammes: dataObject.gamme ? dataObject.gamme.split('¤') : null,
@@ -161,7 +182,7 @@ export default class ConvertProduct {
                                                                                                 if (resultFindOneAndUpdate) {
                                                                                                     ProductGamme.findOneAndUpdate({
                                                                                                         codeArticleGamme: codeGammes
-                                                                                                    }, { $push: { imageUrl: resultSaveProduct.imageUrl } }, (error, resultUpdateProductGamme) => {
+                                                                                                    }, { $addToSet: { imageUrl: resultSaveProduct.imageUrl } }, (error, resultUpdateProductGamme) => {
                                                                                                         if (error) console.log('error:', error);
                                                                                                         if (resultUpdateProductGamme) {
                                                                                                             console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)
@@ -185,7 +206,7 @@ export default class ConvertProduct {
 
                                                                                             pvHt: pvHt,
                                                                                             pvTtc: pvTtc,
-                                                                                            imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : "https://dummyimage.com/640x360/fff/aaa",
+                                                                                            imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : null,
                                                                                             gammesValueConvert: {
                                                                                                 gammesValue: product.gammesValue ? product.gammesValue.split('¤') : null,
                                                                                                 gammes: product.gamme ? product.gamme.split('¤') : null,
@@ -210,7 +231,7 @@ export default class ConvertProduct {
                                                                                                 if (resultFindOneAndUpdate) {
                                                                                                     ProductGamme.findOneAndUpdate({
                                                                                                         codeArticleGamme: codeGammes
-                                                                                                    }, { $push: { imageUrl: result.imageUrl } }, (error, resultUpdateProductGamme) => {
+                                                                                                    }, { $addToSet: { imageUrl: result.imageUrl } }, (error, resultUpdateProductGamme) => {
                                                                                                         if (error) console.log('error:', error);
                                                                                                         if (resultUpdateProductGamme) {
                                                                                                             console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)

@@ -5,6 +5,7 @@ const gammeSchema = mongoose.Schema({
     libelle: { type: String, required: true },
     elementsGammeLibelle: { type: String, required: true },
     gammeValue: { type: String, required: true },
+    ordre: { type: String, required: false }
 
 });
 
