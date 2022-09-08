@@ -103,13 +103,7 @@ export default class ConvertProduct {
                                             fit: 'contain',
                                             position: 'center',
                                             background: { r: 255, g: 255, b: 255 }
-                                        }).composite([
-                                            {
-                                                input: svgBuffer,
-                                                bottom: 0,
-                                                right: 0,
-                                            },
-                                        ]).toFile(imgResize, (err, info) => {
+                                        }).toFile(imgResize, (err, info) => {
                                             if (err) {
                                                 console.log(err);
                                                 // fs.unlink(img, (error, info) => {
