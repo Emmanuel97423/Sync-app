@@ -23,12 +23,13 @@ const watcherCsvFile = async () => {
 
     const watcher = chokidar.watch(filesPath, {
         persistent: true, awaitWriteFinish: {
-            stabilityThreshold: 30000,
-            pollInterval: 500
+            stabilityThreshold: 15000,
+            pollInterval: 100
         }
     });
 
     watcher.on("change", async (event, path) => {
+        console.log('event:', event)
         await Promise.all([
             axios.get(process.env.BASE_URL + "/api/import/gammes"),
             axios.get(process.env.BASE_URL + "/api/import/product-gammes"),
