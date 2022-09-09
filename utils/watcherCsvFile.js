@@ -3,7 +3,7 @@ const axios = require('axios');
 // import ConvertProduct from './classes/convertClasse';
 
 
-const filesPath = "./assets/import/production/article.txt"
+const filesPath = "./assets/import/production/articles.txt"
 // const articlesGammesFile = "./assets/import/production/articles-gamme.txt";
 // const articlesFile = "./assets/import/production/articles.txt";
 // const gammesFile = "./assets/import/production/gamme.txt";
