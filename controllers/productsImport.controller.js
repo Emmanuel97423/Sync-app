@@ -120,15 +120,29 @@ exports.sendProductGamme = async (req, res, next) => {
                             console.log('error:', error)
 
                         }
-                    } else {
+                    }
+                    if (productGamme) {
 
-                        ProductGamme.findOneAndUpdate({ codeArticleGamme: product.codeArticleGamme }, { ...product, isAProductGamme: true }, (error, result) => {
-                            if (error) console.log('error:', error)
-                            if (result) {
-                                console.log('result:', result)
+                        ProductGamme.updateOne({
+                            libelle: product.libelle,
+                            codeFamille: product.codeFamille,
+                            libelleFamille: product.libelleFamille,
+                            brand: product.brand,
+                            pvHt: product.pvHt,
+                            tva: product.tva,
+                            imageUrl: product.imageUrl,
+                            pvTtc: product.pvTtc,
+                            description: product.description,
+                            isAProductGamme: true,
 
-                            }
-                        })
+                        }
+                            , (error, result) => {
+                                if (error) console.log('error:', error)
+                                if (result) {
+                                    console.log('result:', result)
+
+                                }
+                            })
                     }
                     // console.log('productGamme:', productGamme)
                 })

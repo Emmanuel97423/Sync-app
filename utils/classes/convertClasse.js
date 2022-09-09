@@ -43,279 +43,283 @@ export default class ConvertProduct {
     async productCsvToJson() {
 
 
-        try {
-            //Import CSV
-            csv({
-                noheader: false,
-                headers: ["codeArticle", "libelle", "codeFamille", "libelleFamille", "codeSousFamille", "libelleSousFamille", "pvHt", "tva", "pvTtc", "brand", "imageUrl", "stock", "ean", "codeGamme", "gammesValue", "gamme"],
-                trim: true,
-                delimiter: ";",
 
-                fork: true,
+        //Import CSV
+        return csv({
+            noheader: false,
+            headers: ["codeArticle", "libelle", "codeFamille", "libelleFamille", "codeSousFamille", "libelleSousFamille", "pvHt", "tva", "pvTtc", "brand", "imageUrl", "stock", "ean", "codeGamme", "gammesValue", "gamme"],
+            trim: true,
+            delimiter: ";",
 
-            }).fromFile(this._productsCsv).then(jsonToCsvData => {
+            fork: true,
+
+        }).fromFile(this._productsCsv).then(jsonToCsvData => {
 
 
 
-                //Map product Datas
-                Object.keys(jsonToCsvData).map(async key => {
+            //Map product Datas
+            Object.keys(jsonToCsvData).map(async key => {
 
-                    let dataObject = jsonToCsvData[key];
-                    //Call convert and resize image
-                    let filename = dataObject.libelle.toLowerCase().replace(/\s/g, '-').replaceAll(',', '')
+                let dataObject = jsonToCsvData[key];
+                //Call convert and resize image
+                let filename = dataObject.libelle.toLowerCase().replace(/\s/g, '-').replaceAll(',', '')
 
-                    let imageUrl = dataObject.imageUrl
-                    this._productData = dataObject;
-                    const forceConvert = true
+                let imageUrl = dataObject.imageUrl
+                this._productData = dataObject;
+                const forceConvert = true
 
-                    if (imageUrl || forceConvert) {
-                        //Convert image base64 to png
-                        let buf = Buffer.from(imageUrl, 'base64');
-                        let img = './assets/images/' + filename;
-                        let imgResize = './assets/images/Resize' + filename;
+                if (imageUrl || forceConvert) {
+                    //Convert image base64 to png
+                    let buf = Buffer.from(imageUrl, 'base64');
+                    let img = './assets/images/' + filename;
+                    let imgResize = './assets/images/Resize' + filename;
 
-                        try {
-                            //Create image
-                            return fs.writeFile(path.join('./assets/images/', filename), buf, async (error, info) => {
+                    // try {
+                    //Create image
+                    return fs.writeFile(path.join('./assets/images/', filename), buf, async (error, info) => {
 
-                                if (error) {
-                                    console.log({ 'error': error, 'message': 'Image invalide:' + filename })
+                        if (error) {
+                            console.log({ 'error': error, 'message': 'Image invalide:' + filename })
+                        }
+                        if (info || forceConvert) {
+
+                            //                                 try {
+                            //                                     //Text on imageUrl
+                            //                                     const width = 100;
+                            //                                     const height = 80;
+                            //                                     const text = "Exo-trap";
+
+                            //                                     const svgImage = `
+                            // <svg width="${width}" height="${height}">
+                            //   <style>
+                            //   .title { fill: #001; font-size: 15px; font-weight: bold;}
+                            //   </style>
+                            //   <text x="50%" y="50%" text-anchor="middle" class="title">${text}</text>
+                            // </svg>
+                            // `;
+                            //                                     const svgBuffer = Buffer.from(svgImage);
+                            //Resize Image product
+                            return sharp(img).resize(510, 600, {
+                                fit: 'contain',
+                                position: 'center',
+                                background: { r: 255, g: 255, b: 255 }
+                            }).toFile(imgResize, (err, info) => {
+                                if (err) {
+                                    console.log(err);
+                                    // fs.unlink(img, (error, info) => {
+                                    //     if (error) console.log(error)
+                                    //     // if (info) console.log(info)
+                                    // })
+
                                 }
                                 if (info || forceConvert) {
 
-                                    try {
-                                        //Text on imageUrl
-                                        const width = 100;
-                                        const height = 80;
-                                        const text = "Exo-trap";
+                                    // try {
 
-                                        const svgImage = `
-    <svg width="${width}" height="${height}">
-      <style>
-      .title { fill: #001; font-size: 15px; font-weight: bold;}
-      </style>
-      <text x="50%" y="50%" text-anchor="middle" class="title">${text}</text>
-    </svg>
-    `;
-                                        const svgBuffer = Buffer.from(svgImage);
-                                        //Resize Image product
-                                        return sharp(img).resize(510, 600, {
-                                            fit: 'contain',
-                                            position: 'center',
-                                            background: { r: 255, g: 255, b: 255 }
-                                        }).toFile(imgResize, (err, info) => {
-                                            if (err) {
-                                                console.log(err);
-                                                // fs.unlink(img, (error, info) => {
-                                                //     if (error) console.log(error)
-                                                //     // if (info) console.log(info)
-                                                // })
+                                    //DeleteImage temp
 
-                                            }
-                                            if (info || forceConvert) {
+                                    return fs.unlink(img, (error, info) => {
+                                        if (error) {
+                                            console.log(error)
+                                        }
+                                        if (info || forceConvert) {
+                                            //Upload Image to Cloudinary
+                                            return cloudinary.v2.uploader.upload(imgResize,
 
-                                                try {
+                                                { public_id: filename }, (error, cloudinaryResult) => {
 
-                                                    //DeleteImage temp
+                                                    if (error) console.log(error)
+                                                    if (cloudinaryResult || forceConvert) {
+                                                        fs.unlink(imgResize, (error) => {
+                                                            if (error) {
+                                                                console.log('fs.unlink error:', error)
+                                                            } else {
+                                                                // console.log('Fichier supprimer: ' + imgResize)
 
-                                                    return fs.unlink(img, (error, info) => {
-                                                        if (error) {
-                                                            console.log(error)
-                                                        }
-                                                        if (info || forceConvert) {
-                                                            //Upload Image to Cloudinary
-                                                            return cloudinary.v2.uploader.upload(imgResize,
+                                                            }
+                                                        })
+                                                        //Import to Database 
+                                                        // try {
+                                                        Product.findOne({ codeArticle: dataObject.codeArticle }, (error, product) => {
 
-                                                                { public_id: filename }, (error, cloudinaryResult) => {
+                                                            //Convert Gammes
+                                                            const pvHt = parseInt(dataObject.pvHt)
+                                                            const pvTtc = parseInt(dataObject.pvTtc)
 
-                                                                    if (error) console.log(error)
-                                                                    if (cloudinaryResult || forceConvert) {
-
-                                                                        //Import to Database 
-                                                                        try {
-                                                                            Product.findOne({ codeArticle: dataObject.codeArticle }, (error, product) => {
-
-                                                                                //Convert Gammes
-                                                                                const pvHt = parseInt(dataObject.pvHt)
-                                                                                const pvTtc = parseInt(dataObject.pvTtc)
-
-                                                                                // return
-                                                                                //Callback
-                                                                                if (error) console.log('error:', error)
-                                                                                if (!product) {
+                                                            // return
+                                                            //Callback
+                                                            if (error) console.log('error:', error)
+                                                            if (!product) {
 
 
 
-                                                                                    const productModel = new Product({
-                                                                                        ...dataObject,
-                                                                                        isAProductGamme: false,
+                                                                const productModel = new Product({
+                                                                    ...dataObject,
+                                                                    isAProductGamme: false,
 
-                                                                                        pvHt: pvHt,
-                                                                                        pvTtc: pvTtc,
-                                                                                        // stock: stock,
-                                                                                        imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : null,
-                                                                                        gammesValueConvert: {
-                                                                                            gammesValue: dataObject.gammesValue ? dataObject.gammesValue.split('¤') : null,
-                                                                                            gammes: dataObject.gamme ? dataObject.gamme.split('¤') : null,
+                                                                    pvHt: pvHt,
+                                                                    pvTtc: pvTtc,
+                                                                    // stock: stock,
+                                                                    imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : null,
+                                                                    gammesValueConvert: {
+                                                                        gammesValue: dataObject.gammesValue ? dataObject.gammesValue.split('¤') : null,
+                                                                        gammes: dataObject.gamme ? dataObject.gamme.split('¤') : null,
 
-                                                                                        },
+                                                                    },
 
-                                                                                    });
-                                                                                    productModel.save((error, resultSaveProduct) => {
-                                                                                        if (error) console.log('error:', error)
-                                                                                        if (resultSaveProduct) {
-                                                                                            const codeGammes = resultSaveProduct.codeGamme
-                                                                                            ProductGamme.findOneAndUpdate({
-                                                                                                codeArticleGamme: codeGammes
-                                                                                            }, {
-                                                                                                $set: {
-                                                                                                    imageUrl: []
-                                                                                                }
-                                                                                            }, (error, resultFindOneAndUpdate) => {
-                                                                                                if (error) console.log('error:', error);
-                                                                                                if (resultFindOneAndUpdate) {
-                                                                                                    ProductGamme.findOneAndUpdate({
-                                                                                                        codeArticleGamme: codeGammes
-                                                                                                    }, { $addToSet: { imageUrl: resultSaveProduct.imageUrl } }, (error, resultUpdateProductGamme) => {
-                                                                                                        if (error) console.log('error:', error);
-                                                                                                        if (resultUpdateProductGamme) {
-                                                                                                            console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)
+                                                                });
+                                                                productModel.save((error, resultSaveProduct) => {
+                                                                    if (error) console.log('error:', error)
+                                                                    if (resultSaveProduct) {
+                                                                        const codeGammes = resultSaveProduct.codeGamme
+                                                                        ProductGamme.findOneAndUpdate({
+                                                                            codeArticleGamme: codeGammes
+                                                                        }, {
+                                                                            $set: {
+                                                                                imageUrl: []
+                                                                            }
+                                                                        }, (error, resultFindOneAndUpdate) => {
+                                                                            if (error) console.log('error:', error);
+                                                                            if (resultFindOneAndUpdate) {
+                                                                                ProductGamme.findOneAndUpdate({
+                                                                                    codeArticleGamme: codeGammes
+                                                                                }, { $addToSet: { imageUrl: resultSaveProduct.imageUrl } }, (error, resultUpdateProductGamme) => {
+                                                                                    if (error) console.log('error:', error);
+                                                                                    if (resultUpdateProductGamme) {
+                                                                                        console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)
+                                                                                        console.log("success save product")
+                                                                                    }
+                                                                                })
+                                                                            }
+                                                                        })
 
-                                                                                                        }
-                                                                                                    })
-                                                                                                }
-                                                                                            })
-
-
-                                                                                        }
-
-                                                                                    })
-
-
-                                                                                };
-                                                                                if (product) {
-
-                                                                                    Product.findOneAndUpdate({ codeArticle: product.codeArticle }, {
-                                                                                        $set: {
-
-                                                                                            pvHt: pvHt,
-                                                                                            pvTtc: pvTtc,
-                                                                                            imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : null,
-                                                                                            gammesValueConvert: {
-                                                                                                gammesValue: product.gammesValue ? product.gammesValue.split('¤') : null,
-                                                                                                gammes: product.gamme ? product.gamme.split('¤') : null,
-                                                                                            },
-                                                                                            isAProductGamme: false,
-                                                                                        }
-
-
-                                                                                    }, { new: true }, (error, result) => {
-
-                                                                                        if (error) console.log(error);
-                                                                                        if (result) {
-                                                                                            const codeGammes = result.codeGamme
-                                                                                            ProductGamme.findOneAndUpdate({
-                                                                                                codeArticleGamme: codeGammes
-                                                                                            }, {
-                                                                                                $set: {
-                                                                                                    imageUrl: []
-                                                                                                }
-                                                                                            }, (error, resultFindOneAndUpdate) => {
-                                                                                                if (error) console.log('error:', error);
-                                                                                                if (resultFindOneAndUpdate) {
-                                                                                                    ProductGamme.findOneAndUpdate({
-                                                                                                        codeArticleGamme: codeGammes
-                                                                                                    }, { $addToSet: { imageUrl: result.imageUrl } }, (error, resultUpdateProductGamme) => {
-                                                                                                        if (error) console.log('error:', error);
-                                                                                                        if (resultUpdateProductGamme) {
-                                                                                                            console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)
-
-                                                                                                        }
-                                                                                                    })
-                                                                                                }
-                                                                                            })
-                                                                                        }
-                                                                                    })
-
-
-                                                                                }
-
-
-                                                                            })
-                                                                        } catch (error) {
-                                                                            console.log('error:', error)
-
-                                                                        }
-
-                                                                        try {
-                                                                            //Delete Image temp resized
-                                                                            fs.unlink(imgResize, (error) => {
-                                                                                if (error) {
-                                                                                    console.log('fs.unlink error:', error)
-                                                                                } else {
-                                                                                    // console.log('Fichier supprimer: ' + imgResize)
-
-                                                                                }
-                                                                            })
-                                                                        } catch (error) {
-                                                                            console.log('error:', error)
-                                                                        }
 
                                                                     }
-                                                                    //  else {
-                                                                    //     console.log("Image: " + filename + " upload errooooor!: " + error)
-                                                                    // }
-                                                                });
-                                                        }
-                                                    });
-                                                } catch (error) {
-                                                    console.log('error:', error)
-                                                }
+
+                                                                })
 
 
-                                            }
+                                                            };
+                                                            if (product) {
 
-                                        });
+                                                                Product.findOneAndUpdate({ codeArticle: product.codeArticle }, {
+                                                                    $set: {
 
-                                    } catch (error) {
-                                        console.log('error:', error)
-                                    }
-                                    return true
+                                                                        pvHt: pvHt,
+                                                                        pvTtc: pvTtc,
+                                                                        imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : null,
+                                                                        gammesValueConvert: {
+                                                                            gammesValue: product.gammesValue ? product.gammesValue.split('¤') : null,
+                                                                            gammes: product.gamme ? product.gamme.split('¤') : null,
+                                                                        },
+                                                                        isAProductGamme: false,
+                                                                    }
+
+
+                                                                }, { new: true }, (error, result) => {
+
+                                                                    if (error) console.log(error);
+                                                                    if (result) {
+                                                                        const codeGammes = result.codeGamme
+                                                                        ProductGamme.findOneAndUpdate({
+                                                                            codeArticleGamme: codeGammes
+                                                                        }, {
+                                                                            $set: {
+                                                                                imageUrl: []
+                                                                            }
+                                                                        }, (error, resultFindOneAndUpdate) => {
+                                                                            if (error) console.log('error:', error);
+                                                                            if (resultFindOneAndUpdate) {
+                                                                                ProductGamme.findOneAndUpdate({
+                                                                                    codeArticleGamme: codeGammes
+                                                                                }, { $addToSet: { imageUrl: result.imageUrl } }, (error, resultUpdateProductGamme) => {
+                                                                                    if (error) console.log('error:', error);
+                                                                                    if (resultUpdateProductGamme) {
+                                                                                        console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)
+                                                                                        return "success mise a jour"
+                                                                                    }
+                                                                                })
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                })
+
+
+                                                            }
+
+
+                                                        })
+                                                        // } catch (error) {
+                                                        //     console.log('error:', error)
+
+                                                        // }
+
+                                                        // try {
+                                                        //     //Delete Image temp resized
+                                                        //     fs.unlink(imgResize, (error) => {
+                                                        //         if (error) {
+                                                        //             console.log('fs.unlink error:', error)
+                                                        //         } else {
+                                                        //             // console.log('Fichier supprimer: ' + imgResize)
+
+                                                        //         }
+                                                        //     })
+                                                        // } catch (error) {
+                                                        //     console.log('error:', error)
+                                                        // }
+
+                                                    }
+                                                    //  else {
+                                                    //     console.log("Image: " + filename + " upload errooooor!: " + error)
+                                                    // }
+                                                });
+                                        }
+                                    });
+                                    // } catch (error) {
+                                    //     console.log('error:', error)
+                                    // }
+
 
                                 }
+
                             });
 
+                            // } catch (error) {
+                            //     console.log('error:', error)
+                            // }
+                            // return true
 
-
-                        } catch (error) {
-                            console.log('error:', error)
                         }
-                        // return resizeResponse
-
-                    } else {
-                        console.log({ message: 'Image invalide ou abscente: ' + filename })
-
-                    }
+                    });
 
 
-                })
-                try {
-                    //Call  product Gamme methods
-                    this.producGammesCsvToJson()
-                } catch (error) {
-                    console.log('error:', error)
+
+                    // } catch (error) {
+                    //     console.log('error:', error)
+                    // }
+                    // return resizeResponse
+
+                } else {
+                    console.log({ message: 'Image invalide ou abscente: ' + filename })
 
                 }
-            }).catch(error => {
-                console(error)
-                return error
+
+
             })
+            try {
+                //Call  product Gamme methods
+                this.producGammesCsvToJson()
+            } catch (error) {
+                console.log('error:', error)
+
+            }
+        }).catch(error => {
+            console(error)
+            return error
+        })
 
 
-        } catch (error) {
-            console.log('error:', error)
 
-        }
 
     }
     //
