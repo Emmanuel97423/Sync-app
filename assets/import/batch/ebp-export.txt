@@ -1,3 +1,2 @@
 /Database=D:\Documents\Exo Trap.ebp;SDKDEV;Dropknee97460?
-
 /Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles.txt;Items;Export-articles
