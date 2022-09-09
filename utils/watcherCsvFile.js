@@ -3,9 +3,9 @@ const axios = require('axios');
 // import ConvertProduct from './classes/convertClasse';
 
 
-const filesPath = "./assets/import/production/articles.txt"
+const filesPath = "./assets/import/production/"
 // const articlesGammesFile = "./assets/import/production/articles-gamme.txt";
-// const articlesFile = "./assets/import/production/articles.txt";
+const articlesFile = "./assets/import/production/articles.txt";
 // const gammesFile = "./assets/import/production/gamme.txt";
 // const familleFile = "./assets/import/production/familles.txt";
 // const sousFamilleFile = "./assets/import/production/sous-famille.txt";
@@ -21,10 +21,10 @@ const filesPath = "./assets/import/production/articles.txt"
 
 const watcherCsvFile = async () => {
 
-    const watcher = chokidar.watch(filesPath, {
+    const watcher = chokidar.watch(articlesFile, {
         persistent: true, awaitWriteFinish: {
             stabilityThreshold: 15000,
-            pollInterval: 100
+            pollInterval: 200
         }
     });
 
