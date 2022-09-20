@@ -106,15 +106,8 @@ export default class ConvertProduct {
                             }).toFile(imgResize, (err, info) => {
                                 if (err) {
                                     console.log(err);
-                                    // fs.unlink(img, (error, info) => {
-                                    //     if (error) console.log(error)
-                                    //     // if (info) console.log(info)
-                                    // })
-
                                 }
                                 if (info || forceConvert) {
-
-                                    // try {
 
                                     //DeleteImage temp
 
@@ -139,14 +132,14 @@ export default class ConvertProduct {
                                                             }
                                                         })
                                                         //Import to Database 
-                                                        // try {
+                                                        
                                                         Product.findOne({ codeArticle: dataObject.codeArticle }, (error, product) => {
 
                                                             //Convert Gammes
                                                             const pvHt = parseInt(dataObject.pvHt)
                                                             const pvTtc = parseInt(dataObject.pvTtc)
 
-                                                            // return
+                                                            
                                                             //Callback
                                                             if (error) console.log('error:', error)
                                                             if (!product) {
@@ -249,24 +242,7 @@ export default class ConvertProduct {
 
 
                                                         })
-                                                        // } catch (error) {
-                                                        //     console.log('error:', error)
-
-                                                        // }
-
-                                                        // try {
-                                                        //     //Delete Image temp resized
-                                                        //     fs.unlink(imgResize, (error) => {
-                                                        //         if (error) {
-                                                        //             console.log('fs.unlink error:', error)
-                                                        //         } else {
-                                                        //             // console.log('Fichier supprimer: ' + imgResize)
-
-                                                        //         }
-                                                        //     })
-                                                        // } catch (error) {
-                                                        //     console.log('error:', error)
-                                                        // }
+                                                        
 
                                                     }
                                                     //  else {
@@ -275,29 +251,13 @@ export default class ConvertProduct {
                                                 });
                                         }
                                     });
-                                    // } catch (error) {
-                                    //     console.log('error:', error)
-                                    // }
-
+                                 
 
                                 }
 
                             });
-
-                            // } catch (error) {
-                            //     console.log('error:', error)
-                            // }
-                            // return true
-
                         }
                     });
-
-
-
-                    // } catch (error) {
-                    //     console.log('error:', error)
-                    // }
-                    // return resizeResponse
 
                 } else {
                     console.log({ message: 'Image invalide ou abscente: ' + filename })
