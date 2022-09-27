@@ -24,7 +24,7 @@ const watcherCsvFile = async () => {
     const watcher = chokidar.watch(articlesFile, {
         persistent: true,
         awaitWriteFinish: {
-            stabilityThreshold: 150000,
+            stabilityThreshold: 15000,
             pollInterval: 200,
         },
         usePolling: false,
@@ -41,9 +41,10 @@ const watcherCsvFile = async () => {
         await Promise.all([
             axios.get(process.env.BASE_URL + "/api/import/gammes"),
             axios.get(process.env.BASE_URL + "/api/import/product-gammes"),
-            axios.get(process.env.BASE_URL + "/api/products"),
             axios.get(process.env.BASE_URL + "/api/category"),
             axios.get(process.env.BASE_URL + "/api/subCategory"),
+            axios.get(process.env.BASE_URL + "/api/products"),
+
 
         ])
 

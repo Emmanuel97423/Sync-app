@@ -1,6 +1,8 @@
 const Service = require('node-windows').Service;
 
-const scriptPath = 'D:\\LITTORAL_PECHE\\EBP\\SynchronisationApp\\server.js'
+// const scriptPath = 'D:\\LITTORAL_PECHE\\EBP\\SynchronisationApp\\server.js';
+const scriptPath = 'D:\\Documents\\Exo-trap\\EBP\\Synchronisation\\Sync-app\\server.js';
+
 
 
 const svc = new Service({
