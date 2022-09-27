@@ -1,6 +1,11 @@
-import { ResizeClass } from './resizeImage.js'
-import { UploadToCloud } from './upload.js'
-import { ConvertGamme } from './convertGamme.js'
+// import { ResizeClass } from './resizeImage.js';
+// import { UploadToCloud } from './upload.js';
+// import { ConvertGamme } from './convertGamme.js';
+
+const { ResizeClass } = require('./resizeImage.js');
+const { UploadToCloud } = require('./upload.js');
+const { ConvertGamme } = require('./convertGamme.js');
+
 
 const fs = require('fs');
 const path = require('path');
@@ -8,7 +13,7 @@ const path = require('path');
 
 const Product = require('../models/product.model')
 
-export const sendProduct = (base64str, filename, productName, dataObject) => {
+const sendProduct = (base64str, filename, productName, dataObject) => {
     //Convert csv to json
     let buf = Buffer.from(base64str, 'base64');
     fs.writeFile(path.join('./assets/images/', filename), buf, (error) => {
@@ -103,5 +108,7 @@ export const sendProduct = (base64str, filename, productName, dataObject) => {
         };
     });
 };
+
+module.exports = sendProduct;
 
 // module.exports = sendProduct

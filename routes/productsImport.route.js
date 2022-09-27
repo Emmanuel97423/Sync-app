@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const productsImportCtrl = require('../controllers/productsImport.controller')
+const productsImportCtrl = require('../controllers/productsImport.controller.js')
 
 const upload = require('../middleware/upload')
 

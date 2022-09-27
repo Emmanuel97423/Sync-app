@@ -17,7 +17,7 @@ cloudinary.config({
 
 
 
-export default class ConvertProduct {
+class ConvertProduct {
     constructor(productsCsv, productGammeCsv, gammes) {
         this._productsCsv = productsCsv
         this._productGammeCsv = productGammeCsv
@@ -66,7 +66,8 @@ export default class ConvertProduct {
 
                 let imageUrl = dataObject.imageUrl
                 this._productData = dataObject;
-                const forceConvert = true
+                const forceConvert = true;
+
 
                 if (imageUrl || forceConvert) {
                     //Convert image base64 to png
@@ -132,14 +133,14 @@ export default class ConvertProduct {
                                                             }
                                                         })
                                                         //Import to Database 
-                                                        
+
                                                         Product.findOne({ codeArticle: dataObject.codeArticle }, (error, product) => {
 
                                                             //Convert Gammes
                                                             const pvHt = parseInt(dataObject.pvHt)
                                                             const pvTtc = parseInt(dataObject.pvTtc)
 
-                                                            
+
                                                             //Callback
                                                             if (error) console.log('error:', error)
                                                             if (!product) {
@@ -194,12 +195,26 @@ export default class ConvertProduct {
 
                                                             };
                                                             if (product) {
+                                                                console.log('product:', product.stock)
 
                                                                 Product.findOneAndUpdate({ codeArticle: product.codeArticle }, {
                                                                     $set: {
-
+                                                                        ean: dataObject.ean,
+                                                                        codeGamme: dataObject.codeGamme,
+                                                                        gammesValue: dataObject.gammesValue,
+                                                                        gamme: dataObject.gamme,
+                                                                        codeFamille: dataObject.codeFamille,
+                                                                        libelleFamille: dataObject.libelleFamille,
+                                                                        codeSousFamille: dataObject.codeSousFamille,
+                                                                        libelleSousFamille: dataObject.libelleSousFamille,
+                                                                        libelle: dataObject.libelle,
+                                                                        brand: dataObject.brand,
+                                                                        shortDescription: dataObject.shortDescription,
+                                                                        description: dataObject.description,
+                                                                        stock: dataObject.stock,
                                                                         pvHt: pvHt,
                                                                         pvTtc: pvTtc,
+                                                                        tva: dataObject.tva,
                                                                         imageUrl: cloudinaryResult ? cloudinaryResult.secure_url : null,
                                                                         gammesValueConvert: {
                                                                             gammesValue: product.gammesValue ? product.gammesValue.split('¤') : null,
@@ -210,6 +225,7 @@ export default class ConvertProduct {
 
 
                                                                 }, { new: true }, (error, result) => {
+                                                                    console.log('result:', result.stock)
 
                                                                     if (error) console.log(error);
                                                                     if (result) {
@@ -228,7 +244,7 @@ export default class ConvertProduct {
                                                                                 }, { $addToSet: { imageUrl: result.imageUrl } }, (error, resultUpdateProductGamme) => {
                                                                                     if (error) console.log('error:', error);
                                                                                     if (resultUpdateProductGamme) {
-                                                                                        console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)
+                                                                                        // console.log("🚀 ~ file: convertClasse.js ~ line 161 ~ ConvertProduct ~ ProductGamme.findOneAndUpdate ~ resultUpdateProductGamme", resultUpdateProductGamme)
                                                                                         return "success mise a jour"
                                                                                     }
                                                                                 })
@@ -242,7 +258,7 @@ export default class ConvertProduct {
 
 
                                                         })
-                                                        
+
 
                                                     }
                                                     //  else {
@@ -251,7 +267,7 @@ export default class ConvertProduct {
                                                 });
                                         }
                                     });
-                                 
+
 
                                 }
 
@@ -349,6 +365,8 @@ export default class ConvertProduct {
     }
 
 
-}
+};
+
+module.exports = ConvertProduct
 
 

@@ -11,7 +11,7 @@ cloudinary.config({
 });
 
 
-export class ResizeClass {
+class ResizeClass {
     constructor(img, imgResizeName, width, height, filename) {
         this._img = img;
         this._imgResizeName = imgResizeName;
@@ -102,3 +102,5 @@ export class ResizeClass {
     }
 
 }
+
+module.exports = ResizeClass;

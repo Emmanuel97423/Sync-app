@@ -22,11 +22,19 @@ const articlesFile = "./assets/import/production/articles.txt";
 const watcherCsvFile = async () => {
 
     const watcher = chokidar.watch(articlesFile, {
-        persistent: true, awaitWriteFinish: {
-            stabilityThreshold: 15000,
-            pollInterval: 200
-        }
+        persistent: true,
+        awaitWriteFinish: {
+            stabilityThreshold: 150000,
+            pollInterval: 200,
+        },
+        usePolling: false,
+
     });
+
+    watcher.on("ready", () => {
+        console.log('Ready to watch file')
+
+    })
 
     watcher.on("change", async (event, path) => {
         console.log('event:', event)
@@ -38,6 +46,10 @@ const watcherCsvFile = async () => {
             axios.get(process.env.BASE_URL + "/api/subCategory"),
 
         ])
+
+    });
+    watcher.on("error", error => {
+        console.log('error:', error)
 
     })
 

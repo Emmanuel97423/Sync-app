@@ -21,7 +21,7 @@ const productSchema = mongoose.Schema({
     imageUrl: { type: String, required: false },
     pvHt: { type: Number, default: 0, required: false },
     pvTtc: { type: Number, default: 0, required: false },
-    stock: { type: Number, default: 1, min: 0 },
+    stock: { type: Number, required: true },
     actived: { type: String, required: false },
     tva: { type: String, required: false },
     isAProductGamme: { type: Boolean, required: false },

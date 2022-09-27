@@ -1,7 +1,7 @@
 
 const Gammes = require("../models/gamme.model");
 
-export class ConvertGamme {
+class ConvertGamme {
     constructor(product) {
 
         this._product = product;
@@ -98,6 +98,8 @@ export class ConvertGamme {
     // finalProduct() {
     //     this.combineGammes()
     // }
-}
+};
+
+module.exports = ConvertGamme
 
 // module.exports = ConvertGamme;

@@ -18,7 +18,7 @@ cloudinary.config({
 // module.exports = upload
 // cloudinary.image("turtles.jpg", { width: 70, height: 53, crop: "scale" })
 
-export class UploadToCloud {
+class UploadToCloud {
     constructor(imgResize, filename, result, urlImg) {
         this._imgResize = imgResize;
         this._filename = filename;
@@ -62,7 +62,11 @@ export class UploadToCloud {
         //     console.log(err);
         // }
     }
-}
+};
+
+module.exports = UploadToCloud;
+
+
 
 
 

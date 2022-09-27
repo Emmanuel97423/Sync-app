@@ -1,7 +1,8 @@
 const csv = require('csvtojson');
 const csvFilePath = './assets/test.csv';
 const fsExtra = require('fs-extra');
-import { sendProduct } from '../utils/sendProduct.js';
+// import { sendProduct } from '../utils/sendProduct.js';
+const sendProduct = require('../utils/sendProduct.js')
 const ProductGamme = require('../models/productGamme.model');
 const Gamme = require('../models/gamme.model');
 
@@ -127,6 +128,8 @@ exports.sendProductGamme = async (req, res, next) => {
                             libelle: product.libelle,
                             codeFamille: product.codeFamille,
                             libelleFamille: product.libelleFamille,
+                            codeSousFamille: product.codeSousFamille,
+                            sousFamilleLibelle: product.sousFamilleLibelle,
                             brand: product.brand,
                             pvHt: product.pvHt,
                             tva: product.tva,
