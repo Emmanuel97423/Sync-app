@@ -18,7 +18,7 @@ exports.convertToJson = async (req, res, next) => {
 
 
             noheader: false,
-            headers: ['codeArticle', 'libelle', 'codeFamille', 'libelleFamille', 'codeSousFamille', 'libelleSousFamille', 'pvHt', 'tva', 'pvTtc', 'brand', 'imageUrl', 'stock', 'ean', 'codeGamme', 'gammesValue', 'gamme'],
+            headers: ['codeArticle', 'libelle', 'codeFamille', 'libelleFamille', 'codeSousFamille', 'libelleSousFamille', 'pvHt', 'tva', 'pvTtc', 'brand', 'imageUrl', 'stock', 'ean', 'codeGamme', 'gammesValue', 'gamme', 'description'],
             trim: true,
         }).fromFile(productsCsv);
 
@@ -87,13 +87,26 @@ exports.sendProductGamme = async (req, res, next) => {
             noheader: false,
             headers: ['codeArticleGamme', 'libelle', 'codeFamille', 'libelleFamille', 'codeSousArticle', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description', 'imageBase64'],
             trim: true,
+            delimiter: ";",
+            fork: true,
+            // ignoreColumns: /(description)/,
+            checkColumn: true,
+            colParser: {
+                "pvHt": 'number',
+                "pvTtc": 'number',
+
+                "description": "string",
+            },
+            // checkType: true
+
         }).fromFile(csvProductGammesPath);
-
+        const resultArray = []
+        const dataLength = data.length
+        console.log('dataLength:', dataLength)
         try {
+
             data.map((product) => {
-                // console.log("🚀 ~ file: productsImport.controller.js ~ line 93 ~ data.map ~ product", product.codeFamille)
-
-
+                console.log('codeArticleGamme:', product.codeArticleGamme)
                 ProductGamme.findOne({ codeArticleGamme: product.codeArticleGamme }, (error, productGamme) => {
                     if (error) {
                         console.log('error:', error)
@@ -101,18 +114,31 @@ exports.sendProductGamme = async (req, res, next) => {
                     }
                     if (!productGamme) {
                         const productGamme = new ProductGamme({
-                            ...product,
+                            codeArticleGamme: product.codeArticleGamme,
+                            libelle: product.libelle,
+                            codeFamille: product.codeFamille,
+                            libelleFamille: product.libelleFamille,
+                            codeSousFamille: product.codeSousFamille,
+                            sousFamilleLibelle: product.sousFamilleLibelle,
+                            brand: product.brand,
+                            pvHt: product.pvHt,
                             tva: product.tva,
-                            pvTtc: parseFloat(product.pvTtc),
-                            pvHt: parseFloat(product.pvHt),
                             imageUrl: [],
-                            isAProductGamme: true
+                            pvTtc: product.pvTtc,
+                            description: product.description,
+                            isAProductGamme: true,
                         });
                         try {
                             productGamme.save((error, result) => {
                                 if (error) { console.log('error:', error) }
                                 if (result) {
-                                    console.log("Article Gammes enregistré")
+                                    // console.log('result:', result)
+                                    resultArray.push(result);
+                                    data.length--
+                                    if (data.length === 0) {
+                                        res.status(200).json(resultArray)
+                                    }
+                                    // console.log("Article Gammes enregistré")
                                     // res.status(200).json(result)
                                 }
 
@@ -125,6 +151,7 @@ exports.sendProductGamme = async (req, res, next) => {
                     if (productGamme) {
 
                         ProductGamme.updateOne({
+                            codeArticleGamme: product.codeArticleGamme,
                             libelle: product.libelle,
                             codeFamille: product.codeFamille,
                             libelleFamille: product.libelleFamille,
@@ -142,7 +169,14 @@ exports.sendProductGamme = async (req, res, next) => {
                             , (error, result) => {
                                 if (error) console.log('error:', error)
                                 if (result) {
-                                    console.log('result:', result)
+                                    // console.log('result:', result)
+                                    data.length--
+                                    resultArray.push(productGamme);
+                                    if (data.length === 0) {
+                                        res.status(200).json({ "Données mise à jour": resultArray })
+                                    }
+
+                                    // res.status(200).json(result)
 
                                 }
                             })
@@ -173,8 +207,7 @@ exports.sendGamme = async (req, res, next) => {
         fork: true,
     }).fromFile(csvGammeFile).then((gammes) => {
         gammes.map((gamme) => {
-            console.log('gamme:', gamme)
-            Gamme.findOneAndUpdate({ gammeCode: gamme.gammeCode }, {
+            Gamme.findOneAndUpdate({ _id: gamme._id }, {
                 $set: {
                     gammeCode: gamme.gammeCode,
                     libelle: gamme.libelle,
@@ -182,7 +215,8 @@ exports.sendGamme = async (req, res, next) => {
                     gammeValue: gamme.gammeValue,
                     ordreGamme: gamme.ordreGamme,
                 }
-            }, (error, gammeUpdateResult) => {
+            }, { new: true }, (error, gammeUpdateResult) => {
+                console.log('gammeUpdateResult:', gammeUpdateResult)
                 if (error) {
                     console.log('error:', error)
                     return res.status(500).json({ error: error })
@@ -196,6 +230,7 @@ exports.sendGamme = async (req, res, next) => {
                         order: gamme.ordreGamme
                     });
                     gammeSchema.save((error, gammeSaveResult) => {
+                        console.log('gammeSaveResult:', gammeSaveResult)
                         if (error) console.log(error);
                         if (gammeSaveResult) {
                             console.log("🚀 ~ file: productsImport.controller.js ~ line 175 ~ gammeSchema.save ~ result", gammeSaveResult)
@@ -204,7 +239,6 @@ exports.sendGamme = async (req, res, next) => {
                     });
                 }
                 else {
-                    console.log('gammeUpdateResult:', gammeUpdateResult)
                     gammeArray.push(gammeUpdateResult)
 
 

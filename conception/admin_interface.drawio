@@ -1,0 +1,143 @@
+<mxfile host="65bd71144e">
+    <diagram id="nDLFXEuqtVmkwr3QOwJP" name="Diagramme de cas d'usage général">
+        <mxGraphModel dx="1294" dy="434" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+                    <mxGeometry x="190" y="130" width="500" height="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&amp;lt;&amp;lt;Scope systeme&amp;gt;&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="90" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4" target="8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8i_yRleFVIL6Pxfa-t22-16" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;" parent="1" source="4" target="8i_yRleFVIL6Pxfa-t22-15" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Administrateur" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="340" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Se connecter" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="320" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Gérer images additionnelles articles" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="280" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Gérer l'état des commandes" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="410" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Gérer les images en slides" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="530" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="&lt;font style=&quot;font-size: 24px&quot;&gt;Diagramme de cas d'usage général&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="50" width="390" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="ZW-vbjY2boaWi894grZ2-15" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;fontSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="6" target="5" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="520" y="330" as="sourcePoint"/>
+                        <mxPoint x="680" y="330" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ZW-vbjY2boaWi894grZ2-21" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;fontSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="7" target="5" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="430" y="390" as="sourcePoint"/>
+                        <mxPoint x="590" y="390" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ZW-vbjY2boaWi894grZ2-22" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;fontSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="8" target="5" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="430" y="390" as="sourcePoint"/>
+                        <mxPoint x="590" y="390" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8i_yRleFVIL6Pxfa-t22-15" value="Consulter dashboard" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="150" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="8i_yRleFVIL6Pxfa-t22-17" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;fontSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="8i_yRleFVIL6Pxfa-t22-15" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="360" y="340" as="sourcePoint"/>
+                        <mxPoint x="550" y="360" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="T0jdR0GFDc5knzd9bs62" name="Diagramme de cas d'usage détaillé : Se connecter">
+        <mxGraphModel dx="1294" dy="434" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="59W9_1aus5s8J_rWkOXe-0"/>
+                <mxCell id="59W9_1aus5s8J_rWkOXe-1" parent="59W9_1aus5s8J_rWkOXe-0"/>
+                <mxCell id="59W9_1aus5s8J_rWkOXe-2" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fontSize=24;" parent="59W9_1aus5s8J_rWkOXe-1" vertex="1">
+                    <mxGeometry x="220" y="200" width="410" height="410" as="geometry"/>
+                </mxCell>
+                <mxCell id="59W9_1aus5s8J_rWkOXe-3" value="&lt;font style=&quot;font-size: 12px&quot;&gt;&amp;lt;&amp;lt;Scope Système&amp;gt;&amp;gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" parent="59W9_1aus5s8J_rWkOXe-1" vertex="1">
+                    <mxGeometry x="500" y="170" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="kxC81lzMy1NFVV-Q3639-0" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" parent="59W9_1aus5s8J_rWkOXe-1" source="59W9_1aus5s8J_rWkOXe-4" target="sTT63pB6NShPnN-rBgzG-0" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="59W9_1aus5s8J_rWkOXe-4" value="Administrateur" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;" parent="59W9_1aus5s8J_rWkOXe-1" vertex="1">
+                    <mxGeometry x="130" y="350" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="sTT63pB6NShPnN-rBgzG-0" value="Consulter les dernières commandes" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" parent="59W9_1aus5s8J_rWkOXe-1" vertex="1">
+                    <mxGeometry x="365" y="340" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="G4JaeI6C5sSxx37bxYbS-0" value="&lt;font style=&quot;font-size: 14px&quot;&gt;Diagramme de cas d'usage détaillé:&amp;nbsp;Consulter dashboard&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;" parent="59W9_1aus5s8J_rWkOXe-1" vertex="1">
+                    <mxGeometry x="44" y="175" width="370" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="UPAQSZN-O9Nusch8lGBT" name="Gérer l'état des commandes">
+        <mxGraphModel dx="1294" dy="434" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-0"/>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-1" parent="sZTl3zvaGhfrvDB9hGLv-0"/>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-2" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" vertex="1">
+                    <mxGeometry x="220" y="130" width="530" height="530" as="geometry"/>
+                </mxCell>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-11" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" source="sZTl3zvaGhfrvDB9hGLv-3" target="sZTl3zvaGhfrvDB9hGLv-4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-12" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" source="sZTl3zvaGhfrvDB9hGLv-3" target="sZTl3zvaGhfrvDB9hGLv-9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-13" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" source="sZTl3zvaGhfrvDB9hGLv-3" target="sZTl3zvaGhfrvDB9hGLv-10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="BHEcxAs7yvrn7lyNvBdM-1" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" source="sZTl3zvaGhfrvDB9hGLv-3" target="BHEcxAs7yvrn7lyNvBdM-0" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-3" value="Administrateur" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" vertex="1">
+                    <mxGeometry x="150" y="300" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-4" value="Changer le status en : &quot;En cours de préparation&quot;" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" vertex="1">
+                    <mxGeometry x="320" y="150" width="160" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-6" value="Diagramme de cas d'usage détaillé:&amp;nbsp;&lt;span style=&quot;font-size: 12px&quot;&gt;Gérer l'état des commandes&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" vertex="1">
+                    <mxGeometry x="100" y="90" width="390" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-7" value="&amp;lt;&amp;lt;Scope systeme&amp;gt;&amp;gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" vertex="1">
+                    <mxGeometry x="540" y="100" width="140" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-9" value="Changer le status en : &quot;¨Prêt pour le retrait&quot;" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" vertex="1">
+                    <mxGeometry x="320" y="270" width="160" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="sZTl3zvaGhfrvDB9hGLv-10" value="Changer le status en : &quot;Un problème est survenu&quot;" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" vertex="1">
+                    <mxGeometry x="320" y="400" width="160" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="BHEcxAs7yvrn7lyNvBdM-0" value="Envoyer un message concernant la commande" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;" parent="sZTl3zvaGhfrvDB9hGLv-1" vertex="1">
+                    <mxGeometry x="320" y="530" width="160" height="110" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -15,8 +15,6 @@ cloudinary.config({
     api_secret: process.env.API_SECRET
 });
 
-
-
 class ConvertProduct {
     constructor(productsCsv, productGammeCsv, gammes) {
         this._productsCsv = productsCsv
@@ -47,22 +45,34 @@ class ConvertProduct {
         //Import CSV
         return csv({
             noheader: false,
-            headers: ["codeArticle", "libelle", "codeFamille", "libelleFamille", "codeSousFamille", "libelleSousFamille", "pvHt", "tva", "pvTtc", "brand", "imageUrl", "stock", "ean", "codeGamme", "gammesValue", "gamme"],
+            headers: ["codeArticle", "libelle", "codeFamille", "libelleFamille", "codeSousFamille", "libelleSousFamille", "pvHt", "tva", "pvTtc", "brand", "imageUrl", "stock", "ean", "codeGamme", "gammesValue", "gamme", "description"],
             trim: true,
             delimiter: ";",
-
+            checkColumn: true,
             fork: true,
+            colParser: {
+                "pvHt": 'number',
+                "pvTtc": 'number',
+                // "tva": 'number',
+                "description": "string",
+            },
 
         }).fromFile(this._productsCsv).then(jsonToCsvData => {
+            // jsonToCsvData.map(product => {
+            //     console.log('product:', product.description)
 
+            // })
 
+            const regex = /[*/ ']/gm
 
             //Map product Datas
             Object.keys(jsonToCsvData).map(async key => {
 
                 let dataObject = jsonToCsvData[key];
+                // console.log('dataObject.codeArticle:', dataObject.libelle);
                 //Call convert and resize image
-                let filename = dataObject.libelle.toLowerCase().replace(/\s/g, '-').replaceAll(',', '')
+                let filename = dataObject.libelle.replace(/\s/g, '-').replaceAll(',', '').replaceAll('/', '-').replaceAll('*', '-').toLowerCase()
+                // let filename = dataObject.libelle.replaceAll(regex, "_").toLowerCase()
 
                 let imageUrl = dataObject.imageUrl
                 this._productData = dataObject;
@@ -290,7 +300,7 @@ class ConvertProduct {
 
             }
         }).catch(error => {
-            console(error)
+            console.log(error)
             return error
         })
 
@@ -303,14 +313,25 @@ class ConvertProduct {
         try {
             const jsonToCsvData = await csv({
                 noheader: false,
-                headers: ['codeArticleGamme', 'libelle', 'libelleFamille', 'libelleSousFamille', 'fournisseur', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description'],
+                headers: ['codeArticleGamme', 'libelle', 'codeFamille', 'libelleFamille', 'codeSousArticle', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description', 'imageBase64'],
                 trim: true,
+                delimiter: ";",
+                fork: true,
+                // ignoreColumns: /(description)/,
+                checkColumn: true,
+                colParser: {
+                    "pvHt": 'number',
+                    "pvTtc": 'number',
+
+                    "description": "string",
+                }
             }).fromFile(this._productGammeCsv)
             try {
                 if (jsonToCsvData) {
                     this._productGammesData = jsonToCsvData;
 
                     jsonToCsvData.map((productGamme) => {
+                        console.log('productGamme:', productGamme.codeArticleGamme)
 
                         ProductGamme.findOne({ codeArticleGamme: productGamme.codeArticleGamme }, (error, productGamme) => {
 

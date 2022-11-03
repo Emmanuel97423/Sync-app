@@ -1,4 +1,42 @@
 /Database=D:\Documents\Exo Trap.ebp;SDKDEV;Dropknee97460?
+/Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles.txt;Items;Export-articles
+
+
+
+/Export=D:/Documents/Exo-trap/EBP/Synchronisation/Sync-app/assets/import/production/articles.txt;RangeTypes;export-gamme
+/Export=D:/Documents/Exo-trap/EBP/Synchronisation/Sync-app/assets/import/production/articles.txt;ItemFamilies;export-famille
+/Export=D:/Documents/Exo-trap/EBP/Synchronisation/Sync-app/assets/import/production/articles.txt;ItemSubFamilies;export-sous-famille
+
+
+
+
+
+/Database="D:\Documents\Exo Trap.ebp";SDKDEV;Dropknee97460?
+/Export="D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles-gamme.txt;RangeItems;export-articles-gamme
+/Export="D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\articles.txt";Items;Export-articles"
+
+
+
+
+
+
+/Export="D:/Documents/Exo-trap/EBP/Synchronisation/Sync-app/assets/import/production/articles.txt";Items;Export-articles"
+
+
+
+git clone -b feature/windows-service https://github.com/Emmanuel97423/Sync-app.git 
+
+
+Message pour catégorie vide
+Message click and collect
+
+
+D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\batch\ebp-export.txt
+good
+
+git branv
+
+/Database=D:\Documents\Exo Trap.ebp;SDKDEV;Dropknee97460?
 /Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\familles.txt;ItemFamilies;export-famille
 /Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\sous-famille.txt;ItemSubFamilies;export-sous-famille
 /Export=D:\Documents\Exo-trap\EBP\Synchronisation\Sync-app\assets\import\production\gammes.txt;RangeTypes;export-gamme
