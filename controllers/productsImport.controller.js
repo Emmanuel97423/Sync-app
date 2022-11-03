@@ -85,7 +85,7 @@ exports.sendProductGamme = async (req, res, next) => {
     try {
         const data = await csv({
             noheader: false,
-            headers: ['codeArticleGamme', 'libelle', 'codeFamille', 'libelleFamille', 'codeSousArticle', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description', 'imageBase64'],
+            headers: ['codeArticleGamme', 'libelle', 'codeFamille', 'libelleFamille', 'codeSousFamille', 'libelleSousFamille', 'brand', 'pvHt', 'tva', 'pvTtc', 'gammes', 'description', 'imageBase64'],
             trim: true,
             delimiter: ";",
             fork: true,
@@ -101,12 +101,11 @@ exports.sendProductGamme = async (req, res, next) => {
 
         }).fromFile(csvProductGammesPath);
         const resultArray = []
-        const dataLength = data.length
-        console.log('dataLength:', dataLength)
+        let dataLength = data.length
         try {
 
             data.map((product) => {
-                console.log('codeArticleGamme:', product.codeArticleGamme)
+                console.log('codeArticleGamme:', product.libelleSousFamille);
                 ProductGamme.findOne({ codeArticleGamme: product.codeArticleGamme }, (error, productGamme) => {
                     if (error) {
                         console.log('error:', error)
@@ -134,8 +133,8 @@ exports.sendProductGamme = async (req, res, next) => {
                                 if (result) {
                                     // console.log('result:', result)
                                     resultArray.push(result);
-                                    data.length--
-                                    if (data.length === 0) {
+                                    dataLength--
+                                    if (dataLength === 0) {
                                         res.status(200).json(resultArray)
                                     }
                                     // console.log("Article Gammes enregistré")
@@ -170,9 +169,9 @@ exports.sendProductGamme = async (req, res, next) => {
                                 if (error) console.log('error:', error)
                                 if (result) {
                                     // console.log('result:', result)
-                                    data.length--
+                                    dataLength--
                                     resultArray.push(productGamme);
-                                    if (data.length === 0) {
+                                    if (dataLength === 0) {
                                         res.status(200).json({ "Données mise à jour": resultArray })
                                     }
 
